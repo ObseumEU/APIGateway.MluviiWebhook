@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway.MluviiWebhook", "APIGateway.MluviiWebhook.csproj", "{0FB85EA9-9D7E-4752-A717-4ACF4C5245CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway.MluviiWebhook", "APIGateway.MluviiWebhook.csproj", "{0FB85EA9-9D7E-4752-A717-4ACF4C5245CA}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8576DA68-7A57-49C8-ACE7-CDAEFD3A06AF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway.Core", "APIGateway.Core\APIGateway.Core\APIGateway.Core\APIGateway.Core.csproj", "{50A9F6E4-1BD4-46B2-82C8-7EA516963110}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8576DA68-7A57-49C8-ACE7-CDAEFD3A06AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8576DA68-7A57-49C8-ACE7-CDAEFD3A06AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8576DA68-7A57-49C8-ACE7-CDAEFD3A06AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50A9F6E4-1BD4-46B2-82C8-7EA516963110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50A9F6E4-1BD4-46B2-82C8-7EA516963110}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50A9F6E4-1BD4-46B2-82C8-7EA516963110}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50A9F6E4-1BD4-46B2-82C8-7EA516963110}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

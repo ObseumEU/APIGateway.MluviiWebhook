@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - "8080:80"
   zookeeper:
     image: docker.io/bitnami/zookeeper:3.8
     ports:

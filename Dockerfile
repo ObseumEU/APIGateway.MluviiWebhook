@@ -7,6 +7,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["APIGateway.MluviiWebhook.csproj", "."]
+COPY ["APIGateway.Core/APIGateway.Core/APIGateway.Core/APIGateway.Core.csproj", "APIGateway.Core/APIGateway.Core/APIGateway.Core/"]
 RUN dotnet restore "APIGateway.MluviiWebhook.csproj"
 COPY . .
 WORKDIR "/src/"
