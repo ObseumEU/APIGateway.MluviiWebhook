@@ -1,4 +1,5 @@
-﻿using APIGateway.Core.MluviiClient;
+﻿using APIGateway.Core.Kafka;
+using APIGateway.Core.MluviiClient;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
@@ -22,6 +23,13 @@ namespace APIGateway.MluviiWebhook
             using (var scope = _provide.CreateScope())
             {
                 var options = scope.ServiceProvider.GetService<IOptionsMonitor<WebhookOptions>>();
+                var kafkaOptions = scope.ServiceProvider.GetService<IOptions<KafkaProduceOption>>();
+
+                if (string.IsNullOrEmpty(kafkaOptions.Value.Topic))
+                {
+                    return Unhealthy("Kafka topic cannot be null. Please add to appsettings KafkaProduceOption.Topic: \"some-topic\"");
+                }
+
                 if (options.CurrentValue.AutoRegister)
                 {
                     var mluviiClient = scope.ServiceProvider.GetService<MluviiClient>();
@@ -43,7 +51,8 @@ namespace APIGateway.MluviiWebhook
                 {
                     return Unhealthy("Missing secret for webhook.");
                 }
-                
+
+
                 return HealthCheckResult.Healthy("Webhook healthy.");
             }
         }

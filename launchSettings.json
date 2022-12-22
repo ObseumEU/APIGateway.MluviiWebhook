@@ -1,0 +1,24 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "apigateway.mluviiwebhook": "StartWithoutDebugging",
+        "kafka": "StartWithoutDebugging",
+        "kafka-ui": "StartWithoutDebugging",
+        "zookeeper": "StartWithoutDebugging"
+      }
+    },
+    "Test": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "apigateway.mluviiwebhook": "StartWithoutDebugging",
+        "kafka": "StartWithoutDebugging",
+        "kafka-ui": "StartWithoutDebugging",
+        "zookeeper": "StartWithoutDebugging"
+      }
+    }
+  }
+}

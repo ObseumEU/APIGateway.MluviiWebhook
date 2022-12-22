@@ -49,12 +49,9 @@ app.MapHealthChecks("/health");
 //Register webhooks
 using (var serviceScope = app.Services.CreateScope())
 {
-#if !DEBUG
     var svr = serviceScope.ServiceProvider;
     var webhookRegistrator = svr.GetService<WebhookRegistrator>();
     webhookRegistrator.RegisterWebhooks().Wait();
-#endif
-
 }
 
 app.Run();

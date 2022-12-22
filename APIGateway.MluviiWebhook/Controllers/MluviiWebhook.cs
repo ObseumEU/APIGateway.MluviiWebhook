@@ -16,12 +16,14 @@ namespace APIGateway.MluviiWebhook.Controllers
         private readonly ILogger<MluviiWebhook> _logger;
         private readonly IMessageBroker _messageBroker;
         private readonly IOptions<KafkaProduceOption> _producer;
+        private readonly IOptions<WebhookOptions> _webhookOptions;
 
-        public MluviiWebhook(ILogger<MluviiWebhook> logger, IMessageBroker messageBroker , IOptions<KafkaProduceOption> producer)
+        public MluviiWebhook(ILogger<MluviiWebhook> logger, IMessageBroker messageBroker , IOptions<KafkaProduceOption> producer, IOptions<WebhookOptions> webhookOptions)
         {
             _logger = logger;
             _messageBroker = messageBroker;
             _producer = producer;
+            _webhookOptions = webhookOptions;
         }
 
         [HttpPost]
@@ -32,8 +34,15 @@ namespace APIGateway.MluviiWebhook.Controllers
                 Request.EnableBuffering();
             }
 
-            var secret = Request.Query["secret"];
-
+            //Check secret
+            if (!string.IsNullOrEmpty(_webhookOptions.Value.Secret))
+            {
+                if (!Request.Query["secret"].Equals(_webhookOptions.Value.Secret))
+                {
+                    _logger.LogWarning("Unauthorized access to webhook.");
+                    return Unauthorized();
+                }
+            }
 
             Request.Body.Position = 0;
             var reader = new StreamReader(Request.Body, Encoding.UTF8);
@@ -55,7 +64,10 @@ namespace APIGateway.MluviiWebhook.Controllers
                 }
 
                 var payload = jobj["data"].ToObject(bodyType); //Sanitize json, only for allowed payload
-                await _messageBroker.ProduceMessage(_producer.Value.Topic + eventType, JsonConvert.SerializeObject(payload));
+
+                if (string.IsNullOrEmpty(_producer.Value.Topic))
+                    throw new Exception("Topic cannot be null");
+                await _messageBroker.ProduceMessage($"{_producer.Value.Topic}{eventType}", payload);
             }
             else
             {

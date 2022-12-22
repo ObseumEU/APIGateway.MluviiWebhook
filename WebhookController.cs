@@ -35,7 +35,7 @@ public class WebhookController : IClassFixture<ApplicationFixture>
     [Fact]
     public async Task Test_missing_properties_in_webhook()
     {
-        var req = Server.CreateRequest("/MluviiWebhook?secret=34u2342n3b09c4kl650vg347");
+        var req = Server.CreateRequest("/MluviiWebhook");
         var res = await req.PostAsync();
         res.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
@@ -61,7 +61,7 @@ public class WebhookController : IClassFixture<ApplicationFixture>
             JsonConvert.SerializeObject(evnt),
             Encoding.UTF8,
             MediaTypeNames.Application.Json);
-        var res = await req.PostAsync("/MluviiWebhook?secret=34u2342n3b09c4kl650vg347", content);
+        var res = await req.PostAsync("/MluviiWebhook", content);
         res.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
@@ -90,6 +90,7 @@ public class WebhookController : IClassFixture<ApplicationFixture>
             .Callback<string, object>((topic, message) =>
             {
                 topic.Should().Be("MluviiWebhookSessionCreated");
+                var res = JsonConvert.DeserializeObject<SessionCreatedPayload>(message.ToString()); //Test if its deserializable back to payload
             });
         var testClient = Handler.CreateTestServer(services =>
         {
@@ -102,7 +103,7 @@ public class WebhookController : IClassFixture<ApplicationFixture>
             Encoding.UTF8,
             MediaTypeNames.Application.Json);
 
-        var res = await testClient.PostAsync("/MluviiWebhook?secret=34u2342n3b09c4kl650vg347", content);
+        var res = await testClient.PostAsync("/MluviiWebhook", content);
         res.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 }
