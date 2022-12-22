@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "apigateway.mluviiwebhook",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "apigateway.mluviiwebhook": "StartDebugging",
+        "kafka": "StartWithoutDebugging",
+        "zookeeper": "StartWithoutDebugging"
+      }
+    }
+  }
+}

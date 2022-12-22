@@ -1,0 +1,3 @@
+[submodule "APIGateway.Core"]
+	path = APIGateway.Core
+	url = git@github.com:BooAIPublic/APIGateway.Core.git
