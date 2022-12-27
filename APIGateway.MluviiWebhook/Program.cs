@@ -4,7 +4,11 @@ using APIGateway.Core.Kafka;
 using APIGateway.Core.MluviiClient;
 using APIGateway.MluviiWebhook;
 using Microsoft.FeatureManagement;
+using Silverback.Samples.Kafka.Batch.Producer;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var services = builder.Services;
 
 // Add services to the container.
 builder.Services.AddFeatureManagement();
@@ -16,7 +20,16 @@ builder.Services.Configure<WebhookOptions>(builder.Configuration.GetSection("Web
 //Add kafka
 builder.Services.Configure<KafkaOption>(builder.Configuration.GetSection("Kafka"));
 builder.Services.Configure<KafkaProduceOption>(builder.Configuration.GetSection("KafkaProducer"));
-builder.Services.AddScoped<IMessageBroker, KafkaClient>();
+services
+    .AddSilverback()
+    // Use Apache Kafka as message broker
+    .WithConnectionToMessageBroker(
+        options => options
+            .AddKafka())
+
+    // Delegate the inbound/outbound endpoints configuration to a separate
+    // class.
+    .AddEndpointsConfigurator<EndpointsConfigurator>();
 
 builder.Services.AddSingleton<WebhookRegistrator>();
 
