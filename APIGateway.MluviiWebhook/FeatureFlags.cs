@@ -1,6 +1,5 @@
-﻿namespace APIGateway.MluviiWebhook
+﻿namespace APIGateway.MluviiWebhook;
+
+public class FeatureFlags
 {
-    public class FeatureFlags
-    {
-    }
 }

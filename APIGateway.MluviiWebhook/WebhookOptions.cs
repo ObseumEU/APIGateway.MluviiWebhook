@@ -1,4 +1,5 @@
 ﻿namespace APIGateway.MluviiWebhook;
+
 public class WebhookOptions
 {
     public string Secret { get; set; }

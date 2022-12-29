@@ -1,34 +1,32 @@
-﻿using APIGateway.Core.MluviiClient;
-using Quartz;
+﻿using Quartz;
 
-namespace APIGateway.MluviiWebhook.Jobs
+namespace APIGateway.MluviiWebhook.Jobs;
+
+[DisallowConcurrentExecution]
+public class AutoRegisterWebhookJob : IJob
 {
-    [DisallowConcurrentExecution]
-    public class AutoRegisterWebhookJob : IJob
+    private readonly ILogger<AutoRegisterWebhookJob> _log;
+    private readonly IServiceProvider _provider;
+
+    public AutoRegisterWebhookJob(IServiceProvider provider, ILogger<AutoRegisterWebhookJob> log)
     {
-        private readonly IServiceProvider _provider;
-        private readonly ILogger<AutoRegisterWebhookJob> _log;
+        _provider = provider;
+        _log = log;
+    }
 
-        public AutoRegisterWebhookJob(IServiceProvider provider, ILogger<AutoRegisterWebhookJob> log)
+    public async Task Execute(IJobExecutionContext context)
+    {
+        try
         {
-            _provider = provider;
-            _log = log;
+            using (var scope = _provider.CreateScope())
+            {
+                var registration = scope.ServiceProvider.GetService<WebhookRegistrator>();
+                await registration.RegisterWebhooks();
+            }
         }
-
-        public async Task Execute(IJobExecutionContext context)
+        catch (Exception ex)
         {
-            try
-            {
-                using (var scope = _provider.CreateScope())
-                {
-                    var registration = scope.ServiceProvider.GetService<WebhookRegistrator>();
-                    await registration.RegisterWebhooks();
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.LogError(ex, "Cannot register webhooks.");
-            }
+            _log.LogError(ex, "Cannot register webhooks.");
         }
     }
 }

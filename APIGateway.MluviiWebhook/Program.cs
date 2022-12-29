@@ -53,7 +53,7 @@ if (config.GetSection("Webhook:AutoRegister")?.Value == "True")
 }
 
 //Add mluvii client
-    var section = builder.Configuration.GetSection("Mluvii");
+var section = builder.Configuration.GetSection("Mluvii");
 if (section.Exists())
 {
     builder.Services.Configure<MluviiCredentialOptions>(section);
@@ -87,4 +87,6 @@ app.MapHealthChecks("/health");
 app.Run();
 
 
-public partial class Program { }
+public partial class Program
+{
+}
