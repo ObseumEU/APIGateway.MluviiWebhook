@@ -36,6 +36,7 @@ namespace APIGateway.MluviiWebhook.Controllers
                 Request.EnableBuffering();
             }
 
+
             //Check secret
             if (!string.IsNullOrEmpty(_webhookOptions.Value.Secret))
             {
@@ -50,6 +51,7 @@ namespace APIGateway.MluviiWebhook.Controllers
             var reader = new StreamReader(Request.Body, Encoding.UTF8);
             var body = await reader.ReadToEndAsync().ConfigureAwait(false);
             Request.Body.Position = 0;
+            _logger.LogInformation("Request body:" + body);
 
             var jobj = JsonConvert.DeserializeObject<JObject>(body);
             if (jobj != null && jobj["eventType"] != null)

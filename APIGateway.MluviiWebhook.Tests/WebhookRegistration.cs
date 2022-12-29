@@ -5,6 +5,7 @@ using System.Threading;
 using APIGateway.Core.MluviiClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using mluvii.ApiModels.Webhooks;
 using RestSharp;
@@ -16,6 +17,7 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
     [Fact]
     public async Task Can_autoregister_webhook_on_clean_mluvii_wit_secret()
     {
+        var logger = new Mock<ILogger<WebhookRegistrator>>();
         var mluvii = new Mock<IMluviiClient>();
         var response = MoqIRestResponse();
         var webhooks = new List<WebhookModel>()
@@ -25,7 +27,7 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
         mluvii.Setup(_ => _.AddWebhook(It.IsAny<string>(), It.IsAny<List<string>>()))
             .Callback<string, List<string>>((i, s) =>
             {
-                i.Should().Be("https://foo.com&secret=TestSecret");
+                i.Should().Be("https://foo.com?secret=TestSecret");
                 s.Count.Should().Be(1);
                 s.FirstOrDefault().Should().Be("sessionCreated");
             });
@@ -39,7 +41,7 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
             WebhookUrl = "https://foo.com"
         });
 
-        WebhookRegistrator registrator = new WebhookRegistrator(option, mluvii.Object);
+        WebhookRegistrator registrator = new WebhookRegistrator(option, mluvii.Object, logger.Object);
         await registrator.RegisterWebhooks();
         await registrator.RegisterWebhooks(); //Try more times
         await registrator.RegisterWebhooks(); //Try more times
@@ -69,8 +71,8 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
             Methods = new string[] { "sessionCreated" },
             WebhookUrl = "https://foo.com"
         });
-
-        WebhookRegistrator registrator = new WebhookRegistrator(option, mluvii.Object);
+        var logger = new Mock<ILogger<WebhookRegistrator>>();
+        WebhookRegistrator registrator = new WebhookRegistrator(option, mluvii.Object, logger.Object);
         await registrator.RegisterWebhooks();
         await registrator.RegisterWebhooks(); //Try more times
         await registrator.RegisterWebhooks(); //Try more times
@@ -137,7 +139,7 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
             WebhookUrl = "https://foo.com"
         });
 
-        WebhookRegistrator registrator = new WebhookRegistrator(option, mluvii.Object);
+        WebhookRegistrator registrator = new WebhookRegistrator(option, mluvii.Object, new Mock<ILogger<WebhookRegistrator>>().Object);
         await registrator.RegisterWebhooks();
         await registrator.RegisterWebhooks(); //Try more times
         await registrator.RegisterWebhooks(); //Try more times
@@ -182,7 +184,7 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
             WebhookUrl = "https://foo2.com"
         });
 
-        WebhookRegistrator registrator = new WebhookRegistrator(option, mluvii.Object);
+        WebhookRegistrator registrator = new WebhookRegistrator(option, mluvii.Object, new Mock<ILogger<WebhookRegistrator>>().Object);
         await registrator.RegisterWebhooks();
         await registrator.RegisterWebhooks(); //Try more times
         await registrator.RegisterWebhooks(); //Try more times

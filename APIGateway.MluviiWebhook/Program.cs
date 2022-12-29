@@ -3,16 +3,28 @@ using APIGateway.Core.Cache;
 using APIGateway.Core.Kafka;
 using APIGateway.Core.MluviiClient;
 using APIGateway.MluviiWebhook;
+using APIGateway.MluviiWebhook.Jobs;
 using Microsoft.FeatureManagement;
+using Sentry;
 using Silverback.Samples.Kafka.Batch.Producer;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var config = builder.Configuration;
 var services = builder.Services;
 
 // Add services to the container.
 builder.Services.AddFeatureManagement();
+services.AddLogging(builder =>
+    builder
+        .AddDebug()
+        .AddConsole()
+        .AddConfiguration(config.GetSection("Logging"))
+        .SetMinimumLevel(LogLevel.Information)
+);
 builder.Services.AddControllers();
+
+builder.WebHost.UseSentry();
+
 
 //Options 
 builder.Services.Configure<WebhookOptions>(builder.Configuration.GetSection("Webhook"));
@@ -33,8 +45,15 @@ services
 
 builder.Services.AddSingleton<WebhookRegistrator>();
 
+//Add auto register webhooks
+if (config.GetSection("Webhook:AutoRegister")?.Value == "True")
+{
+    builder.Services.AddQuartzJobs();
+    services.AddSingletonJob<AutoRegisterWebhookJob>("*/59 * * * * ?"); //Every minute try register webhook again
+}
+
 //Add mluvii client
-var section = builder.Configuration.GetSection("Mluvii");
+    var section = builder.Configuration.GetSection("Mluvii");
 if (section.Exists())
 {
     builder.Services.Configure<MluviiCredentialOptions>(section);
@@ -50,6 +69,13 @@ builder.Services.AddHealthChecks()
     .AddCheck<MluviiWebhookHealthCheck>("Webhook");
 
 var app = builder.Build();
+
+if (config.GetSection("Sentry").Exists())
+{
+    app.UseSentryTracing();
+    SentrySdk.CaptureMessage("Webhook service started!");
+}
+
 // Configure the HTTP request pipeline.
 app.UseRouting();
 app.UseAuthentication();
@@ -57,15 +83,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHealthChecks("/health");
-
-
-//Register webhooks
-using (var serviceScope = app.Services.CreateScope())
-{
-    var svr = serviceScope.ServiceProvider;
-    var webhookRegistrator = svr.GetService<WebhookRegistrator>();
-    webhookRegistrator.RegisterWebhooks().Wait();
-}
 
 app.Run();
 

@@ -19,6 +19,7 @@ using mluvii.ApiModels.Webhooks.Payloads;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using Silverback.Messaging.Publishing;
 
 namespace APIGateway.MluviiWebhook.Tests;
 
@@ -45,14 +46,14 @@ public class WebhookController : IClassFixture<ApplicationFixture>
     {
         WebhookEvent evnt = new WebhookEvent()
         {
-            data = JObject.FromObject(new SessionCreatedPayload()
+            JsonData = JObject.FromObject(new SessionCreatedPayload()
             {
                 Id = 1,
                 Channel = SessionChannel.Chat,
                 Source = SessionSource.Default,
                 TenantId = 1
-            }),
-            eventType = "UnknownEventTypeFoo"
+            }).ToString(),
+            EventType = "UnknownEventTypeFoo"
 
         };
         var req = Server.CreateClient();
@@ -68,7 +69,7 @@ public class WebhookController : IClassFixture<ApplicationFixture>
     [Fact]
     public async Task Test_simple_webhook_sessionCreated()
     {
-        WebhookEvent evnt = new WebhookEvent()
+        var evnt = new
         {
             data = JObject.FromObject(new SessionCreatedPayload()
             {
@@ -81,19 +82,20 @@ public class WebhookController : IClassFixture<ApplicationFixture>
 
         };
 
-        var broker = new Mock<IMessageBroker>();
+        var broker = new Mock<IPublisher>();
         IOptions<KafkaProduceOption> options = Options.Create(new KafkaProduceOption()
         {
             Topic = "MluviiWebhook"
         });
-        broker.Setup(_ => _.ProduceMessage(It.IsAny<string>(), It.IsAny<object>()))
-            .Callback<string, object>((topic, message) =>
+        broker.Setup(_ => _.PublishAsync(It.IsAny<object>()))
+            .Callback<object>(message =>
             {
-                topic.Should().Be("MluviiWebhookSessionCreated");
+                var evnt = (WebhookEvent) message;
+                evnt.EventType.Should().Be("SessionCreated");
             });
         var testClient = Handler.CreateTestServer(services =>
         {
-            services.AddScoped<IMessageBroker>(provider => broker.Object);
+            services.AddScoped<IPublisher>(provider => broker.Object);
             services.AddSingleton(options);
         }).CreateClient();
         
@@ -101,7 +103,6 @@ public class WebhookController : IClassFixture<ApplicationFixture>
             JsonConvert.SerializeObject(evnt),
             Encoding.UTF8,
             MediaTypeNames.Application.Json);
-
         var res = await testClient.PostAsync("/MluviiWebhook?secret=34u2342n3b09c4kl650vg347", content);
         res.StatusCode.Should().Be(HttpStatusCode.OK);
     }
