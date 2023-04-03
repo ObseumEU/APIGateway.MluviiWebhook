@@ -27,6 +27,12 @@ public class MluviiWebhook : ControllerBase
         _webhookOptions = webhookOptions;
     }
 
+    [HttpGet]
+    public async Task<ActionResult> WebhookGet()
+    {
+        return Ok("Yes i am alive!");
+    }
+
     [HttpPost]
     public async Task<ActionResult> WebhookPost()
     {
