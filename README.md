@@ -50,21 +50,6 @@ The application has a built-in health check endpoint at `/health`. This can be u
 
 If you'd like to contribute to this project, feel free to submit a pull request or open an issue.
 
-General Description
-# Mluvii Webhook API Gateway
-
-This project is an API Gateway for handling Mluvii Webhooks. It is designed to receive webhook events, validate them, and forward them to a Kafka topic for further processing.
-
-## Table of Contents
-
-- [Code Overview](#code-overview)
-  - [AutoRegisterWebhookJob](#autoregisterwebhookjob)
-  - [MluviiWebhookHealthCheck](#mluviwebhookhealthcheck)
-  - [WebhookRegistrator](#webhookregistrator)
-  - [WebhookOptions](#webhookoptions)
-  - [Startup Configuration](#startup-configuration)
-- [Dockerfile](#dockerfile)
-
 ## Code Overview
 
 ### AutoRegisterWebhookJob
