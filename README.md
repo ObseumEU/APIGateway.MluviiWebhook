@@ -50,11 +50,6 @@ The application has a built-in health check endpoint at `/health`. This can be u
 
 If you'd like to contribute to this project, feel free to submit a pull request or open an issue.
 
-## License
-
-This project is licensed under the MIT License.
-
-
 Mluvii Webhook API Gateway
 Overview
 The Mluvii Webhook API Gateway is a service that receives webhook events from Mluvii and forwards them to a Kafka topic. It also supports health checks and automatic webhook registration.
