@@ -1,3 +1,60 @@
+# Mluvii Webhook API Gateway
+
+This project is an API Gateway for handling Mluvii Webhooks. It is designed to receive webhook events, validate them, and forward them to a Kafka topic for further processing.
+
+## Table of Contents
+
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Health Check](#health-check)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Getting Started
+
+These instructions will help you set up and configure the API Gateway for Mluvii Webhooks.
+
+### Prerequisites
+
+- .NET 6.0
+- Kafka
+
+### Installation
+
+1. Clone the repository
+2. Build the solution
+3. Configure the `appsettings.json` file (see [Configuration](#configuration) section for more details)
+4. Run the project
+
+## Usage
+
+After deploying the application, it will listen for incoming webhook events from Mluvii. Once a valid event is received, it will be forwarded to the configured Kafka topic.
+
+## Configuration
+
+You can configure the application using the `appsettings.json` file. Here are the main settings you need to adjust:
+
+- `Kafka`: Set the Kafka server host and port
+- `KafkaProducer`: Set the Kafka topic where the webhook events will be sent
+- `Webhook`: Set the webhook secret, methods, auto-register setting, and webhook URL
+- `Mluvii`: Set the Mluvii API base URL, token endpoint, name, and secret
+
+## Health Check
+
+The application has a built-in health check endpoint at `/health`. This can be used to monitor the health of the API Gateway.
+
+## Contributing
+
+If you'd like to contribute to this project, feel free to submit a pull request or open an issue.
+
+## License
+
+This project is licensed under the MIT License.
+
+
 Mluvii Webhook API Gateway
 Overview
 The Mluvii Webhook API Gateway is a service that receives webhook events from Mluvii and forwards them to a Kafka topic. It also supports health checks and automatic webhook registration.
@@ -34,3 +91,6 @@ FeatureManagement: Feature management settings.
 Mluvii: Mluvii API settings, including the base API endpoint, token endpoint, client name, and secret.
 Dockerfile
 The provided Dockerfile builds a Docker image for the service. It uses the mcr.microsoft.com/dotnet/aspnet:6.0 and mcr.microsoft.com/dotnet/sdk:6.0 images as the base for runtime and build environments, respectively. The service is exposed on port 5025, and a health check is configured using curl to hit the /health endpoint.
+
+
+
