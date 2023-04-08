@@ -50,42 +50,43 @@ The application has a built-in health check endpoint at `/health`. This can be u
 
 If you'd like to contribute to this project, feel free to submit a pull request or open an issue.
 
-Mluvii Webhook API Gateway
-Overview
-The Mluvii Webhook API Gateway is a service that receives webhook events from Mluvii and forwards them to a Kafka topic. It also supports health checks and automatic webhook registration.
+General Description
+# Mluvii Webhook API Gateway
 
-Components
-1. EndpointsConfigurator
-The EndpointsConfigurator class configures Kafka endpoints for producers and consumers. It sets the bootstrap server address for connecting to Kafka and defines an outbound Kafka endpoint for producing WebhookEvent messages.
+This project is an API Gateway for handling Mluvii Webhooks. It is designed to receive webhook events, validate them, and forward them to a Kafka topic for further processing.
 
-2. MluviiWebhook Controller
-The MluviiWebhook controller handles incoming HTTP requests for webhook events. It supports two endpoints:
+## Table of Contents
 
-GET /MluviiWebhook: A simple health check endpoint that returns "Yes, I am alive!"
-POST /MluviiWebhook: Handles incoming webhook events from Mluvii, deserializes the payload, and publishes it as a WebhookEvent message to the Kafka topic.
-3. AutoRegisterWebhookJob
-The AutoRegisterWebhookJob class is a Quartz job that automatically registers the webhook URL with Mluvii at a defined interval. It uses the WebhookRegistrator class to handle registration.
+- [Code Overview](#code-overview)
+  - [AutoRegisterWebhookJob](#autoregisterwebhookjob)
+  - [MluviiWebhookHealthCheck](#mluviwebhookhealthcheck)
+  - [WebhookRegistrator](#webhookregistrator)
+  - [WebhookOptions](#webhookoptions)
+  - [Startup Configuration](#startup-configuration)
+- [Dockerfile](#dockerfile)
 
-4. MluviiWebhookHealthCheck
-The MluviiWebhookHealthCheck class implements a custom health check to verify the proper configuration of the service, including checking Kafka topic settings, Mluvii client communication, and webhook secret settings.
+## Code Overview
 
-5. WebhookRegistrator
-The WebhookRegistrator class handles the registration of webhook URLs with Mluvii. It can update an existing webhook or create a new one with the provided webhook URL and event types.
+### AutoRegisterWebhookJob
 
-6. WebhookOptions
-The WebhookOptions class represents the configuration options for the webhook service, including the webhook secret, automatic registration flag, event types to subscribe to, and the webhook URL.
+The `AutoRegisterWebhookJob` class is responsible for periodically registering the webhook with Mluvii. It uses a Quartz scheduler to execute the job on a specified interval.
 
-Configuration
-The service can be configured using the appsettings.json file. The main configuration sections include:
+### MluviiWebhookHealthCheck
 
-Logging: Logging settings for the application.
-Kafka: Kafka connection settings, including the bootstrap server address.
-KafkaProducer: Kafka producer settings, including the topic to produce messages to.
-Webhook: Webhook configuration, including the secret, event types, automatic registration flag, and webhook URL.
-FeatureManagement: Feature management settings.
-Mluvii: Mluvii API settings, including the base API endpoint, token endpoint, client name, and secret.
-Dockerfile
-The provided Dockerfile builds a Docker image for the service. It uses the mcr.microsoft.com/dotnet/aspnet:6.0 and mcr.microsoft.com/dotnet/sdk:6.0 images as the base for runtime and build environments, respectively. The service is exposed on port 5025, and a health check is configured using curl to hit the /health endpoint.
+The `MluviiWebhookHealthCheck` class is a health check implementation for the API Gateway. It checks the availability of the Mluvii client and Kafka settings to determine the health of the application.
 
+### WebhookRegistrator
 
+The `WebhookRegistrator` class is responsible for registering, updating, and managing the Mluvii webhook. It communicates with the Mluvii API to ensure the webhook is properly configured.
 
+### WebhookOptions
+
+The `WebhookOptions` class is a configuration object that holds various settings related to the webhook, such as the secret, auto-register setting, methods, and webhook URL.
+
+### Startup Configuration
+
+The startup configuration code sets up various services, such as feature management, logging, Kafka, and Mluvii client. It also configures health checks and the main application pipeline.
+
+## Dockerfile
+
+The provided Dockerfile is used to build and package the application in a Docker container. It uses the .NET 6.0 runtime and SDK images, and includes steps to build, test, and publish the application. The Dockerfile also defines a health check using the `/health` endpoint.
