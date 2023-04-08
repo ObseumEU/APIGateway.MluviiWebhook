@@ -1,89 +1,36 @@
-# APIGateway.MluviiWebhook Documentation
+Mluvii Webhook API Gateway
+Overview
+The Mluvii Webhook API Gateway is a service that receives webhook events from Mluvii and forwards them to a Kafka topic. It also supports health checks and automatic webhook registration.
 
-## Introduction
+Components
+1. EndpointsConfigurator
+The EndpointsConfigurator class configures Kafka endpoints for producers and consumers. It sets the bootstrap server address for connecting to Kafka and defines an outbound Kafka endpoint for producing WebhookEvent messages.
 
-APIGateway.MluviiWebhook is a C# project that allows you to receive and handle webhook notifications from the Mluvii live chat software. This project is designed to run in a Docker container, making it easy to deploy and scale.
+2. MluviiWebhook Controller
+The MluviiWebhook controller handles incoming HTTP requests for webhook events. It supports two endpoints:
 
-## Getting Started
+GET /MluviiWebhook: A simple health check endpoint that returns "Yes, I am alive!"
+POST /MluviiWebhook: Handles incoming webhook events from Mluvii, deserializes the payload, and publishes it as a WebhookEvent message to the Kafka topic.
+3. AutoRegisterWebhookJob
+The AutoRegisterWebhookJob class is a Quartz job that automatically registers the webhook URL with Mluvii at a defined interval. It uses the WebhookRegistrator class to handle registration.
 
-### Prerequisites
+4. MluviiWebhookHealthCheck
+The MluviiWebhookHealthCheck class implements a custom health check to verify the proper configuration of the service, including checking Kafka topic settings, Mluvii client communication, and webhook secret settings.
 
-- Docker
+5. WebhookRegistrator
+The WebhookRegistrator class handles the registration of webhook URLs with Mluvii. It can update an existing webhook or create a new one with the provided webhook URL and event types.
 
-### Installation
+6. WebhookOptions
+The WebhookOptions class represents the configuration options for the webhook service, including the webhook secret, automatic registration flag, event types to subscribe to, and the webhook URL.
 
-1. Clone the repository to your local machine:
+Configuration
+The service can be configured using the appsettings.json file. The main configuration sections include:
 
-git clone https://github.com/BooAIPublic/APIGateway.MluviiWebhook.git
-
-arduino
-Copy code
-
-2. Build the Docker image:
-
-docker build -t apigateway-mluvii-webhook .
-
-markdown
-Copy code
-
-3. Run the Docker container:
-
-docker run -p 8080:80 -d apigateway-mluvii-webhook
-
-javascript
-Copy code
-
-### Configuration
-
-The APIGateway.MluviiWebhook project uses environment variables for configuration. The following environment variables are required:
-
-- `MluviiApiUrl`: The URL of the Mluvii API endpoint.
-- `MluviiApiToken`: The API token used for authentication with the Mluvii API.
-
-You can set these environment variables in your Docker container by passing them in as arguments to the `docker run` command:
-
-docker run -p 8080:80 -d -e MluviiApiUrl=<url> -e MluviiApiToken=<token> apigateway-mluvii-webhook
-
-csharp
-Copy code
-
-## API Documentation
-
-The APIGateway.MluviiWebhook project provides the following endpoints:
-
-### `POST /webhook`
-
-This endpoint is used to receive webhook notifications from the Mluvii live chat software. The payload of the webhook notification is sent in the body of the request.
-
-#### Request Format
-
-POST /webhook HTTP/1.1
-Content-Type: application/json
-
-{
-"eventType": "string",
-"chatId": "string",
-"data": { ... }
-}
-
-r
-Copy code
-
-#### Response Format
-
-The response to the webhook notification should be an HTTP 200 OK status code.
-
-## Contributing
-
-Contributions to APIGateway.MluviiWebhook are welcome! Please submit any pull requests to the `main` branch.
-
-## Troubleshooting
-
-### "Unable to connect to the Mluvii API"
-
-This error can occur if the `MluviiApiUrl` or `MluviiApiToken` environment variables are not set correctly. Please check your configuration and try again.
-
-## Limitations and Known Issues
-
-- The APIGateway.MluviiWebhook project currently only supports a subset of the Mluvii webhook notification types. Future updates may add support for additional notification types.
-- The APIGateway.MluviiWebhook project does not currently include any authentication or authoriz
+Logging: Logging settings for the application.
+Kafka: Kafka connection settings, including the bootstrap server address.
+KafkaProducer: Kafka producer settings, including the topic to produce messages to.
+Webhook: Webhook configuration, including the secret, event types, automatic registration flag, and webhook URL.
+FeatureManagement: Feature management settings.
+Mluvii: Mluvii API settings, including the base API endpoint, token endpoint, client name, and secret.
+Dockerfile
+The provided Dockerfile builds a Docker image for the service. It uses the mcr.microsoft.com/dotnet/aspnet:6.0 and mcr.microsoft.com/dotnet/sdk:6.0 images as the base for runtime and build environments, respectively. The service is exposed on port 5025, and a health check is configured using curl to hit the /health endpoint.
