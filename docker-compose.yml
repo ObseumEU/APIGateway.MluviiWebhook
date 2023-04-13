@@ -1,13 +1,13 @@
 version: '3.4'
 
 services:
-  #apigateway.mluviiwebhook:
-  #  image: ${DOCKER_REGISTRY-}apigatewaymluviiwebhook
-  #  build:
-  #    context: ./
-  #    dockerfile: Dockerfile
-  #  ports:
-  #    - "5025:8080"
+  apigateway.mluviiwebhook:
+   image: ${DOCKER_REGISTRY-}apigatewaymluviiwebhook
+   build:
+     context: ./
+     dockerfile: Dockerfile
+   ports:
+     - "5025:5025"
   kafka-0:
     image: confluentinc/cp-kafka:5.4.1
     container_name: kafka-0
