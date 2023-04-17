@@ -1,5 +1,9 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging. 
  
+FROM alpine as yourkit-stage
+RUN wget -q https://www.yourkit.com/dotnet/download/docker/YourKit-NetProfiler-2022.3-docker.zip
+RUN unzip -q YourKit-NetProfiler-2022.3-docker.zip
+
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base 
 WORKDIR /app 
 RUN apt-get update && apt-get --yes install curl
@@ -27,6 +31,15 @@ ENV ASPNETCORE_URLS="http://0.0.0.0:5025"
 EXPOSE 5025 
 
 HEALTHCHECK --interval=30s --timeout=6s --retries=3 CMD curl --fail http://localhost:5025/health || exit 1
+
+# Copy profiler files from the previous stage
+COPY --from=yourkit-stage /YourKit-NetProfiler /YourKit-NetProfiler
+
+# Enable profiling
+ENV CORECLR_ENABLE_PROFILING="1" \
+    CORECLR_PROFILER="{E5A4ADC4-C749-400D-B066-6AC8C1D3790A}" \
+    CORECLR_PROFILER_PATH_64="/YourKit-NetProfiler/bin/linux-x86-64/libynpagent.so" \
+    YNP_STARTUP_OPTIONS="listen=all,port=10004"
 
 ENTRYPOINT ["dotnet", "APIGateway.MluviiWebhook.dll"] 
 
