@@ -1,5 +1,6 @@
 ﻿using APIGateway.Core.Kafka;
 using APIGateway.Core.Kafka.Messages;
+using APIGateway.MluviiWebhook;
 using Microsoft.Extensions.Options;
 using Silverback.Messaging.Configuration;
 
@@ -9,11 +10,13 @@ public class EndpointsConfigurator : IEndpointsConfigurator
 {
     private readonly IOptions<KafkaOption> _kafkaOption;
     private readonly IOptions<KafkaProduceOption> _producerOption;
+    private readonly IServiceProvider _provider;
 
-    public EndpointsConfigurator(IOptions<KafkaOption> kafkaOption, IOptions<KafkaProduceOption> producerOption)
+    public EndpointsConfigurator(IOptions<KafkaOption> kafkaOption, IOptions<KafkaProduceOption> producerOption, IServiceProvider provider)
     {
         _kafkaOption = kafkaOption;
         _producerOption = producerOption;
+        _provider = provider;
     }
 
     public void Configure(IEndpointsConfigurationBuilder builder)
@@ -37,5 +40,20 @@ public class EndpointsConfigurator : IEndpointsConfigurator
                         {
                             return $"{_producerOption.Value.Topic}-{envelope.Message.EventType}";
                         })));
+
+        using (var scope = _provider.CreateScope())
+        {
+            var ser = scope.ServiceProvider;
+
+            var pub = ser.GetRequiredService<Silverback.Messaging.Publishing.IPublisher>();
+            var opt = ser.GetRequiredService<IOptions<WebhookOptions>>();
+            foreach (var webhook in opt.Value.Methods)
+            {
+                pub.Publish(new WebhookEvent()
+                {
+                    EventType = webhook
+                });
+            }
+        }
     }
 }
