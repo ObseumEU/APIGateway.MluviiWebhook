@@ -30,7 +30,7 @@ public class MluviiWebhook : ControllerBase
     [HttpGet]
     public async Task<ActionResult> WebhookGet()
     {
-        return Ok("Yes i am alive!");
+        return Ok("Yes i am alive! Mluvii webhook.");
     }
 
     [HttpPost]
