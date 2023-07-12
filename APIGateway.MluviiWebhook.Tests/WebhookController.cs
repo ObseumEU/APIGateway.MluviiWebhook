@@ -83,7 +83,7 @@ public class WebhookController : IClassFixture<ApplicationFixture>
         };
 
         var broker = new Mock<IPublisher>();
-        IOptions<KafkaProduceOption> options = Options.Create(new KafkaProduceOption()
+        IOptions<KafkaProduceOption> options = Options.Create(new KafkaProduceOption
         {
             Topic = "MluviiWebhook"
         });

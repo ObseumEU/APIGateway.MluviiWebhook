@@ -35,9 +35,13 @@ public class WebhookRegistrator
         var newMethods = _options.Value.Methods.ToList();
         //Not existing webhook
         if (currentWebhook != null)
+        {
             await _mluvii.UpdateWebhook(currentWebhook.ID.Value, targetUrl, newMethods);
+        }
         else
+        {
             //Already existing webhook
             await _mluvii.AddWebhook(targetUrl, newMethods);
+        }
     }
 }

@@ -1,4 +1,3 @@
-using System.Text;
 using APIGateway.Core.Kafka;
 using APIGateway.Core.Kafka.Messages;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Silverback.Messaging.Publishing;
+using System.Text;
 
 namespace APIGateway.MluviiWebhook.Controllers;
 
@@ -36,16 +36,21 @@ public class MluviiWebhook : ControllerBase
     [HttpPost]
     public async Task<ActionResult> WebhookPost()
     {
-        if (!Request.Body.CanSeek) Request.EnableBuffering();
+        if (!Request.Body.CanSeek)
+        {
+            Request.EnableBuffering();
+        }
 
 
         //Check secret
         if (!string.IsNullOrEmpty(_webhookOptions.Value.Secret))
+        {
             if (!Request.Query["secret"].Equals(_webhookOptions.Value.Secret))
             {
                 _logger.LogWarning("Unauthorized access to webhook.");
                 return Unauthorized();
             }
+        }
 
         Request.Body.Position = 0;
         var reader = new StreamReader(Request.Body, Encoding.UTF8);

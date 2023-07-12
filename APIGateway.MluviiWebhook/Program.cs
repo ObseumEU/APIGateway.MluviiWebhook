@@ -1,12 +1,9 @@
 using APIGateway.Core;
 using APIGateway.Core.Cache;
 using APIGateway.Core.Kafka;
-using APIGateway.Core.Kafka.Messages;
 using APIGateway.Core.MluviiClient;
 using APIGateway.MluviiWebhook;
 using APIGateway.MluviiWebhook.Jobs;
-using Microsoft.AspNetCore;
-using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Sentry;
 using Silverback.Samples.Kafka.Batch.Producer;

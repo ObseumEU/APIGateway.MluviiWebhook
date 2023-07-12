@@ -20,7 +20,7 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
         var logger = new Mock<ILogger<WebhookRegistrator>>();
         var mluvii = new Mock<IMluviiClient>();
         var response = MoqIRestResponse();
-        var webhooks = new List<WebhookModel>()
+        var webhooks = new List<WebhookModel>
         {
 
         };
@@ -36,7 +36,7 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
         IOptions<WebhookOptions> option = Options.Create(new WebhookOptions()
         {
             AutoRegister = true,
-            Methods = new string[] { "sessionCreated" },
+            Methods = new[] { "sessionCreated" },
             Secret = "TestSecret",
             WebhookUrl = "https://foo.com"
         });
@@ -52,7 +52,7 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
     {
         var mluvii = new Mock<IMluviiClient>();
         var response = MoqIRestResponse();
-        var webhooks = new List<WebhookModel>()
+        var webhooks = new List<WebhookModel>
         {
 
         };
@@ -83,12 +83,12 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
     {
         var mluvii = new Mock<IMluviiClient>();
         var response = MoqIRestResponse();
-        var webhooks = new List<WebhookModel>()
+        var webhooks = new List<WebhookModel>
         {
-            new WebhookModel()
+            new WebhookModel
             {
                 CallbackUrl = "https://foo.com",
-                EventTypes = new List<WebhookEventType>()
+                EventTypes = new List<WebhookEventType>
                 {
                     WebhookEventType.ApplicationSettingChanged,
                     WebhookEventType.EmailThreadCreated,
@@ -97,10 +97,10 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
                 },
                 ID = 1
             },
-            new WebhookModel()
+            new WebhookModel
             {
                 CallbackUrl = "https://foo1.com",
-                EventTypes = new List<WebhookEventType>()
+                EventTypes = new List<WebhookEventType>
                 {
                     WebhookEventType.ApplicationSettingChanged,
                     WebhookEventType.EmailThreadCreated,
@@ -109,10 +109,10 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
                 },
                 ID = 2
             }
-            ,            new WebhookModel()
+            ,            new WebhookModel
             {
                 CallbackUrl = "https://foo2.com",
-                EventTypes = new List<WebhookEventType>()
+                EventTypes = new List<WebhookEventType>
                 {
                     WebhookEventType.ApplicationSettingChanged,
                     WebhookEventType.EmailThreadCreated,
@@ -122,7 +122,7 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
                 ID = 3
             }
         };
-        mluvii.Setup(_ => _.UpdateWebhook(It.IsAny<int>(), It.IsAny<string>(),It.IsAny<List<string>>()))
+        mluvii.Setup(_ => _.UpdateWebhook(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>()))
             .Callback<int, string, List<string>>((id, callback, events) =>
             {
                 id.Should().Be(1);
@@ -151,12 +151,12 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
     {
         var mluvii = new Mock<IMluviiClient>();
         var response = MoqIRestResponse();
-        var webhooks = new List<WebhookModel>()
+        var webhooks = new List<WebhookModel>
         {
-            new WebhookModel()
+            new WebhookModel
             {
                 CallbackUrl = "https://foo.com",
-                EventTypes = new List<WebhookEventType>()
+                EventTypes = new List<WebhookEventType>
                 {
                     WebhookEventType.ApplicationSettingChanged,
                     WebhookEventType.EmailThreadCreated,
@@ -180,7 +180,7 @@ public class WebhookRegistration : IClassFixture<ApplicationFixture>
         IOptions<WebhookOptions> option = Options.Create(new WebhookOptions()
         {
             AutoRegister = true,
-            Methods = new string[] { "sessionCreated" , "test1" , "test2"},
+            Methods = new string[] { "sessionCreated", "test1", "test2" },
             WebhookUrl = "https://foo2.com"
         });
 
