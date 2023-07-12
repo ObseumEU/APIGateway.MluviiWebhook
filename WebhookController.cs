@@ -68,7 +68,7 @@ public class WebhookController : IClassFixture<ApplicationFixture>
     [Fact]
     public async Task Test_simple_webhook_sessionCreated()
     {
-        WebhookEvent evnt = new WebhookEvent()
+        var evnt = new WebhookEvent
         {
             data = JObject.FromObject(new SessionCreatedPayload()
             {

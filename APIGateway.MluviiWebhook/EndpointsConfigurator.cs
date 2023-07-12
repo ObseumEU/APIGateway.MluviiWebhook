@@ -49,7 +49,7 @@ public class EndpointsConfigurator : IEndpointsConfigurator
             var opt = ser.GetRequiredService<IOptions<WebhookOptions>>();
             foreach (var webhook in opt.Value.Methods)
             {
-                pub.Publish(new WebhookEvent()
+                pub.Publish(new WebhookEvent
                 {
                     EventType = webhook
                 });

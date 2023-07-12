@@ -44,7 +44,7 @@ public class WebhookController : IClassFixture<ApplicationFixture>
     [Fact]
     public async Task Ensure_that_application_can_process_unknown_event_type()
     {
-        WebhookEvent evnt = new WebhookEvent()
+        var evnt = new WebhookEvent
         {
             JsonData = JObject.FromObject(new SessionCreatedPayload()
             {
