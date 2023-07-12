@@ -28,7 +28,7 @@ public class WebhookRegistrator
         var targetUrl = _secured ? secretUrl : baseUrl;
 
         var res = await _mluvii.GetWebhooks();
-        var currentWebhook = res.value.FirstOrDefault(w =>
+        var currentWebhook = res.value?.FirstOrDefault(w =>
             w.CallbackUrl == baseUrl || //Find urls without secret and with secret.
             w.CallbackUrl == secretUrl);
 
