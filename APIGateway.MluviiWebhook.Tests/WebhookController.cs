@@ -46,7 +46,7 @@ public class WebhookController : IClassFixture<ApplicationFixture>
     {
         var evnt = new WebhookEvent
         {
-            JsonData = JObject.FromObject(new SessionCreatedPayload()
+            JsonData = JObject.FromObject(new SessionCreatedPayload
             {
                 Id = 1,
                 Channel = SessionChannel.Chat,
@@ -71,7 +71,7 @@ public class WebhookController : IClassFixture<ApplicationFixture>
     {
         var evnt = new
         {
-            data = JObject.FromObject(new SessionCreatedPayload()
+            data = JObject.FromObject(new SessionCreatedPayload
             {
                 Id = 1,
                 Channel = SessionChannel.Chat,
