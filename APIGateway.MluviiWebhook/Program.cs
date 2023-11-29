@@ -22,9 +22,14 @@ services.AddLogging(builder =>
         .SetMinimumLevel(LogLevel.Information)
 );
 builder.Services.AddControllers();
-
 builder.WebHost.UseSentry();
 
+
+var featureManager = services.BuildServiceProvider().GetService<IFeatureManager>();
+if (await featureManager.IsEnabledAsync(FeatureFlags.OPEN_TELEMETRY))
+{
+    builder.Services.AddConsoleOpenTelemetry(config.GetSection("OpenTelemetryOptions"));
+}
 
 //Options 
 builder.Services.Configure<WebhookOptions>(builder.Configuration.GetSection("Webhook"));

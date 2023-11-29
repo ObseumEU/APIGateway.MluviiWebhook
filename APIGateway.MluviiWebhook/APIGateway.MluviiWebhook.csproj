@@ -21,6 +21,11 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.FeatureManagement" Version="2.5.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+		<PackageReference Include="OpenTelemetry" Version="1.6.0" />
+		<PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.6.0" />
+		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.6.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.6.0-beta.3" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.6.0-beta.3" />
 		<PackageReference Include="Sentry.AspNetCore" Version="3.25.0" />
 		<PackageReference Include="Silverback.Integration.Kafka" Version="3.8.0" />
 		<PackageReference Include="Silverback.Integration.Newtonsoft" Version="3.8.0" />
