@@ -16,7 +16,9 @@ namespace APIGateway.MluviiWebhook
         {
             var openTelemetryOptions = configSection.Get<OpenTelemetryOptions>();
             if (openTelemetryOptions == null || string.IsNullOrEmpty(openTelemetryOptions?.UrlGrpc))
+            {
                 return;
+            }
 
             services.Configure<OpenTelemetryOptions>(configSection);
             Sdk.CreateTracerProviderBuilder()
