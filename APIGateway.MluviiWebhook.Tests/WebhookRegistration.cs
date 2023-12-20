@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using APIGateway.Core.MluviiClient;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using mluvii.ApiModels.Webhooks;
 using RestSharp;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace APIGateway.MluviiWebhook.Tests;
 
