@@ -24,4 +24,25 @@ jobs:
       DOCKER_USER: ${{ secrets.DOCKER_USER }}
       DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
+  extract-coverage:
+      # Make sure to run on the same type of runner as the previous job to avoid any compatibility issues.
+      runs-on: ubuntu-latest
+      # This job needs to run after the 'docker' job
+      needs: docker
+      steps:
+        # This step is necessary to interact with Docker layers
+        - name: Checkout repository
+          uses: actions/checkout@v4
 
+        - name: Extract coverage reports
+          run: |
+            docker create --name temp-container mluvii/api-gateway-webhook:latest
+            docker cp temp-container:/app/coverage/ coverage/
+            docker rm temp-container
+
+        - name: Upload coverage to Codecov
+          uses: codecov/codecov-action@v3
+          with:
+            directory: ./coverage/
+            flags: mluviiwebhook
+            name: ${{ github.workflow }}-${{ github.run_number }}-mluviiwebhook
