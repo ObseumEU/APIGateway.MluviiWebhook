@@ -15,16 +15,17 @@ RUN dotnet build "APIGateway.MluviiWebhook/APIGateway.MluviiWebhook.csproj" -c R
 FROM build AS publish 
 RUN dotnet publish "APIGateway.MluviiWebhook/APIGateway.MluviiWebhook.csproj" -c Release -o /app/publish -f net6.0
  
-
-RUN dotnet restore "APIGateway.MluviiWebhook.Tests/APIGateway.MluviiWebhook.Tests.csproj"
-RUN dotnet build "APIGateway.MluviiWebhook.Tests/APIGateway.MluviiWebhook.Tests.csproj"
-RUN dotnet test "APIGateway.MluviiWebhook.Tests/APIGateway.MluviiWebhook.Tests.csproj"
+ARG RUN_TESTS
+RUN if [ "$RUN_TESTS" = "true" ]; then \
+      dotnet test "APIGateway.MluviiWebhook.Tests/APIGateway.MluviiWebhook.Tests.csproj" --collect:"XPlat Code Coverage" --results-directory:"/app/coverage/"; \
+    fi
 
 FROM base AS final 
 WORKDIR /app 
 COPY --from=publish /app/publish . 
 ENV ASPNETCORE_ENVIRONMENT="Production" 
 ENV ASPNETCORE_URLS="http://0.0.0.0:5025" 
+
 EXPOSE 5025 
 
 HEALTHCHECK --interval=30s --timeout=6s --retries=3 CMD curl --fail http://localhost:5025/health || exit 1
@@ -36,5 +37,3 @@ ENV CORECLR_ENABLE_PROFILING="1" \
     YNP_STARTUP_OPTIONS="listen=all,port=10004"
 
 ENTRYPOINT ["dotnet", "APIGateway.MluviiWebhook.dll"] 
-
-
