@@ -13,7 +13,6 @@ public class MluviiWebhookTests
 {
     private readonly Mock<ILogger<Controllers.MluviiWebhook>> _loggerMock;
     private readonly Mock<IPublisher> _messageBrokerMock;
-    private readonly Mock<IOptions<KafkaProduceOption>> _producerMock;
     private readonly Mock<IOptions<WebhookOptions>> _webhookOptionsMock;
     private readonly Controllers.MluviiWebhook _controller;
 
@@ -21,10 +20,9 @@ public class MluviiWebhookTests
     {
         _loggerMock = new Mock<ILogger<Controllers.MluviiWebhook>>();
         _messageBrokerMock = new Mock<IPublisher>();
-        _producerMock = new Mock<IOptions<KafkaProduceOption>>();
         _webhookOptionsMock = new Mock<IOptions<WebhookOptions>>();
 
-        _controller = new Controllers.MluviiWebhook(_loggerMock.Object, _messageBrokerMock.Object, _producerMock.Object, _webhookOptionsMock.Object);
+        _controller = new Controllers.MluviiWebhook(_loggerMock.Object, _messageBrokerMock.Object, _webhookOptionsMock.Object);
     }
 
     private ControllerContext CreateMockHttpContext(string requestBody, string secret)

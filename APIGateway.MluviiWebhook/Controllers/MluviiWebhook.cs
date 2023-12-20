@@ -1,4 +1,3 @@
-using APIGateway.Core.Kafka;
 using APIGateway.Core.Kafka.Messages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -15,15 +14,13 @@ public class MluviiWebhook : ControllerBase
 {
     private readonly ILogger<MluviiWebhook> _logger;
     private readonly IPublisher _messageBroker;
-    private readonly IOptions<KafkaProduceOption> _producer;
     private readonly IOptions<WebhookOptions> _webhookOptions;
 
-    public MluviiWebhook(ILogger<MluviiWebhook> logger, IPublisher messageBroker, IOptions<KafkaProduceOption> producer,
+    public MluviiWebhook(ILogger<MluviiWebhook> logger, IPublisher messageBroker,
         IOptions<WebhookOptions> webhookOptions)
     {
         _logger = logger;
         _messageBroker = messageBroker;
-        _producer = producer;
         _webhookOptions = webhookOptions;
     }
 

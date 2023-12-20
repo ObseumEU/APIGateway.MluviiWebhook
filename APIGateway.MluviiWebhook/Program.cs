@@ -31,8 +31,13 @@ if (await featureManager.IsEnabledAsync(FeatureFlags.OPEN_TELEMETRY))
     builder.Services.AddConsoleOpenTelemetry(config.GetSection("OpenTelemetryOptions"));
 }
 
-//Options 
-builder.Services.Configure<WebhookOptions>(builder.Configuration.GetSection("Webhook"));
+if (await featureManager.IsEnabledAsync(FeatureFlags.RABBITMQ))
+{
+
+}
+
+    //Options 
+    builder.Services.Configure<WebhookOptions>(builder.Configuration.GetSection("Webhook"));
 
 //Add kafka
 builder.Services.Configure<KafkaOption>(builder.Configuration.GetSection("Kafka"));
