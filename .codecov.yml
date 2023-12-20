@@ -4,3 +4,4 @@ coverage:
     - "APIGateway.MluviiWebhook/EndpointsConfigurator.cs"
     - "APIGateway.MluviiWebhook/MluviiWebhookHealthCheck.cs"
     - "APIGateway.MluviiWebhook/OpenTelemetry/*"
+    - "APIGateway.MluviiWebhook/ServiceExtensions.cs"
