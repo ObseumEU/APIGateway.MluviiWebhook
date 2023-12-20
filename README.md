@@ -4,47 +4,65 @@
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 [![codecov](https://codecov.io/github/BooAIPublic/APIGateway.MluviiWebhook/graph/badge.svg?token=A55O60A046)](https://codecov.io/github/BooAIPublic/APIGateway.MluviiWebhook)
 
-# Mluvii Webhook API Gateway
+# APIGateway.MluviiWebhook
 
-Mluvii Webhook API Gateway is a .NET 6.0 application designed to act as a middleware for handling Mluvii Webhooks. It listens for incoming webhook events from Mluvii, validates them, and forwards them to a Kafka topic for further processing【9†source】.
+## Overview
 
-## Table of Contents
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Building and Running with Docker](#building-and-running-with-docker)
-- [Health Check](#health-check)
-- [Contributing](#contributing)
-- [License](#license)
+APIGateway.MluviiWebhook is a .NET 6 project designed to integrate with Mluvii's webhook system. It provides a flexible and robust way to handle events from Mluvii, a platform for customer service and communication. The project includes a Dockerfile for easy deployment and is designed with extensibility and maintainability in mind.
 
-## Prerequisites
-- .NET 6.0
-- Kafka【9†source】
+## Features
 
-## Installation
-1. Clone the repository
-2. Build the solution
-3. Configure the `appsettings.json` file (see [Configuration](#configuration) section for more details)
-4. Run the project【9†source】
-
-## Usage
-After deploying the application, it will listen for incoming webhook events from Mluvii. Once a valid event is received, it will be forwarded to the configured Kafka topic【9†source】.
+- **Webhook Integration**: Easily receive and process webhook events from Mluvii.
+- **Logging**: Integrated logging with `ILogger`, providing insights into the application's operation.
+- **Health Checks**: Includes a health check endpoint for monitoring the service's status.
+- **OpenTelemetry Integration**: Optional telemetry for monitoring and observability.
+- **Kafka Integration**: Outbound event publishing to Kafka topics.
+- **RabbitMQ Integration**: Optional configuration for using RabbitMQ as a message broker.
+- **Feature Flags**: Use of feature flags for enabling or disabling components like OpenTelemetry and RabbitMQ.
 
 ## Configuration
-You can configure the application using the `appsettings.json` file. Here are the main settings you need to adjust:
-- `Kafka`: Set the Kafka server host and port
-- `KafkaProducer`: Set the Kafka topic where the webhook events will be sent
-- `Webhook`: Set the webhook secret【9†source】
 
-## Building and Running with Docker
-The provided Dockerfile outlines the steps to build and run the application in a Docker container. The application runs on .NET 6.0 and listens on port 5025. It also includes a health check endpoint that can be accessed at `http://localhost:5025/health`【13†source】.
+- `appsettings.json`: Configure Kafka, RabbitMQ, Webhook, and other settings.
+- `Dockerfile`: For containerization and deployment.
+- `.csproj` file: Define project dependencies and settings.
 
-## Health Check
-The application includes a health check endpoint at `http://localhost:5025/health`. This can be used to monitor the status of the application when it is running.
+## Getting Started
+
+1. **Prerequisites**:
+   - .NET 6 SDK
+   - Docker (for containerization)
+   - Kafka and RabbitMQ servers (if using those features)
+
+2. **Setup**:
+   - Clone the repository.
+   - Configure `appsettings.json` with your specific settings for Kafka, RabbitMQ, Mluvii, and other components.
+
+3. **Running the Application**:
+   - Run `dotnet build` to build the project.
+   - Run `dotnet run` to start the application locally.
+   - Alternatively, use Docker to build and run the containerized application.
+
+4. **Health Checks**:
+   - Access the `/health` endpoint for health status.
+
+5. **Logging**:
+   - Check the console or configured log destination for logs.
+
+## Development
+
+- Extend or modify the existing controllers and services as per your business requirements.
+- Add new features and integrations as needed.
+- Write and run tests for new and existing functionalities.
+
+## Deployment
+
+- Use the provided Dockerfile for containerization.
+- Deploy to a container orchestration platform like Kubernetes, Docker Swarm, or a cloud provider's service.
 
 ## Contributing
-If you are interested in contributing to this project, please refer to the CONTRIBUTING.md file for guidelines.
 
-## License
-This project is licensed under the MIT License. Please see the LICENSE file for more details.
+- Contributions are welcome. Please fork the repository and submit pull requests with your enhancements.
+
+## Support
+
+- For support, please open an issue in the repository or contact the maintainers.
