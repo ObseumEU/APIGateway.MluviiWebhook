@@ -1,6 +1,6 @@
 coverage:
   ignore:
-    - "program.cs"
-    - "EndpointsConfigurator.cs"
-    - "MluviiWebhookHealthCheck.cs"
-    - "OpenTelemetry/*"
+    - "APIGateway.MluviiWebhook/program.cs"
+    - "APIGateway.MluviiWebhook/EndpointsConfigurator.cs"
+    - "APIGateway.MluviiWebhook/MluviiWebhookHealthCheck.cs"
+    - "APIGateway.MluviiWebhook/OpenTelemetry/*"
