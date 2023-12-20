@@ -15,14 +15,13 @@ RUN dotnet build "APIGateway.MluviiWebhook/APIGateway.MluviiWebhook.csproj" -c R
 FROM build AS publish 
 RUN dotnet publish "APIGateway.MluviiWebhook/APIGateway.MluviiWebhook.csproj" -c Release -o /app/publish -f net6.0
  
-ARG RUN_TESTS
-RUN if [ "$RUN_TESTS" = "true" ]; then \
-      dotnet test "APIGateway.MluviiWebhook.Tests/APIGateway.MluviiWebhook.Tests.csproj" --collect:"XPlat Code Coverage" --results-directory:"/app/coverage/"; \
-    fi
+FROM build AS test 
+RUN dotnet test "APIGateway.MluviiWebhook.Tests/APIGateway.MluviiWebhook.Tests.csproj" --collect:"XPlat Code Coverage" --results-directory:"/app/coverage/";
 
 FROM base AS final 
 WORKDIR /app 
 COPY --from=publish /app/publish . 
+COPY --from=test /app/coverage ./coverage
 ENV ASPNETCORE_ENVIRONMENT="Production" 
 ENV ASPNETCORE_URLS="http://0.0.0.0:5025" 
 
