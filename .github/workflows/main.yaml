@@ -36,7 +36,7 @@ jobs:
 
         - name: Extract coverage reports
           run: |
-            docker create --name temp-container mluvii/api-gateway-webhook:latest
+            docker create --name temp-container mluvii/api-gateway-mluvii-webhook:latest
             docker cp temp-container:/app/coverage/ coverage/
             docker rm temp-container
 
