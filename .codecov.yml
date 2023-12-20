@@ -1,0 +1,6 @@
+coverage:
+  ignore:
+    - "program.cs"
+    - "EndpointsConfigurator.cs"
+    - "MluviiWebhookHealthCheck.cs"
+    - "OpenTelemetry/*"
