@@ -5,3 +5,4 @@ coverage:
     - "APIGateway.MluviiWebhook/MluviiWebhookHealthCheck.cs"
     - "APIGateway.MluviiWebhook/OpenTelemetry/*"
     - "APIGateway.MluviiWebhook/ServiceExtensions.cs"
+    - "APIGateway.MluviiWebhook/Jobs/AutoRegisterWebhookJob.cs"
