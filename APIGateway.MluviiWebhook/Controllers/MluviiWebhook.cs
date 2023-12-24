@@ -1,6 +1,7 @@
 using APIGateway.Core.Kafka.Messages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Silverback.Messaging.Publishing;
@@ -15,13 +16,15 @@ public class MluviiWebhook : ControllerBase
     private readonly ILogger<MluviiWebhook> _logger;
     private readonly IPublisher _messageBroker;
     private readonly IOptions<WebhookOptions> _webhookOptions;
+    private readonly IFeatureManager _feature;
 
     public MluviiWebhook(ILogger<MluviiWebhook> logger, IPublisher messageBroker,
-        IOptions<WebhookOptions> webhookOptions)
+        IOptions<WebhookOptions> webhookOptions, IFeatureManager feature)
     {
         _logger = logger;
         _messageBroker = messageBroker;
         _webhookOptions = webhookOptions;
+        _feature = feature;
     }
 
     [HttpGet]
@@ -37,7 +40,6 @@ public class MluviiWebhook : ControllerBase
         {
             Request.EnableBuffering();
         }
-
 
         //Check secret
         if (!string.IsNullOrEmpty(_webhookOptions.Value.Secret))
@@ -58,11 +60,12 @@ public class MluviiWebhook : ControllerBase
         var jobj = JsonConvert.DeserializeObject<JObject>(body);
         if (jobj != null && jobj["eventType"] != null)
         {
-            var payload = new WebhookEvent();
-            payload.EventType = jobj["eventType"].ToString();
-            payload.JsonData = jobj["data"].ToString();
+            await PublishKafkaEvent(jobj);
 
-            await _messageBroker.PublishAsync(payload);
+            if(await _feature.IsEnabledAsync(FeatureFlags.RABBITMQ))
+            {
+                await PublishRabbitMQEvent(jobj);
+            }
         }
         else
         {
@@ -71,5 +74,19 @@ public class MluviiWebhook : ControllerBase
         }
 
         return Ok();
+    }
+
+    private Task PublishRabbitMQEvent(JObject jobj)
+    {
+        
+    }
+
+    private async Task PublishKafkaEvent(JObject jobj)
+    {
+        var payload = new WebhookEvent();
+        payload.EventType = jobj["eventType"].ToString();
+        payload.JsonData = jobj["data"].ToString();
+
+        await _messageBroker.PublishAsync(payload);
     }
 }
