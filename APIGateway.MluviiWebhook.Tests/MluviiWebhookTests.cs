@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Silverback.Messaging.Publishing;
 using System.IO;
+using Microsoft.FeatureManagement;
 
 namespace APIGateway.MluviiWebhook.Tests;
 
@@ -14,6 +15,7 @@ public class MluviiWebhookTests
     private readonly Mock<ILogger<Controllers.MluviiWebhook>> _loggerMock;
     private readonly Mock<IPublisher> _messageBrokerMock;
     private readonly Mock<IOptions<WebhookOptions>> _webhookOptionsMock;
+    private readonly Mock<IFeatureManager> _featureMock;
     private readonly Controllers.MluviiWebhook _controller;
 
     public MluviiWebhookTests()
@@ -21,8 +23,8 @@ public class MluviiWebhookTests
         _loggerMock = new Mock<ILogger<Controllers.MluviiWebhook>>();
         _messageBrokerMock = new Mock<IPublisher>();
         _webhookOptionsMock = new Mock<IOptions<WebhookOptions>>();
-
-        _controller = new Controllers.MluviiWebhook(_loggerMock.Object, _messageBrokerMock.Object, _webhookOptionsMock.Object);
+        _featureMock = new Mock<IFeatureManager>();
+        _controller = new Controllers.MluviiWebhook(_loggerMock.Object, _messageBrokerMock.Object, _webhookOptionsMock.Object, _featureMock.Object);
     }
 
     private ControllerContext CreateMockHttpContext(string requestBody, string secret)
