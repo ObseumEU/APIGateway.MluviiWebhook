@@ -1,4 +1,5 @@
 using APIGateway.Core.Kafka.Messages;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
@@ -62,7 +63,7 @@ public class MluviiWebhook : ControllerBase
         {
             await PublishKafkaEvent(jobj);
 
-            if(await _feature.IsEnabledAsync(FeatureFlags.RABBITMQ))
+            if (await _feature.IsEnabledAsync(FeatureFlags.RABBITMQ))
             {
                 await PublishRabbitMQEvent(jobj);
             }
@@ -78,7 +79,7 @@ public class MluviiWebhook : ControllerBase
 
     private Task PublishRabbitMQEvent(JObject jobj)
     {
-        
+        throw new NotImplementedException();
     }
 
     private async Task PublishKafkaEvent(JObject jobj)
