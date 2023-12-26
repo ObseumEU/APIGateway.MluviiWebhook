@@ -1,6 +1,5 @@
 using APIGateway.MluviiWebhook.Contracts;
 using MassTransit;
-using MassTransit.Transports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
