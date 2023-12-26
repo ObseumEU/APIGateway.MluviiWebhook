@@ -3,12 +3,12 @@ using Microsoft.FeatureManagement;
 using Sentry;
 
 var builder = WebApplication.CreateBuilder(args);
-ConfigureServices(builder);
+await ConfigureServices(builder);
 var app = builder.Build();
 ConfigurePipeline(app);
 app.Run();
 
-void ConfigureServices(WebApplicationBuilder builder)
+async Task ConfigureServices(WebApplicationBuilder builder)
 {
     var services = builder.Services;
     var config = builder.Configuration;
@@ -16,9 +16,9 @@ void ConfigureServices(WebApplicationBuilder builder)
     services.AddFeatureManagement();
     services.AddLogging(config);
     services.AddControllers();
-    services.ConfigureTelemetry(config);
+    await services.ConfigureTelemetry(config);
     services.ConfigureMluviiClient(config);
-    services.ConfigureRabbitMQ(config);
+    await services.ConfigureRabbitMQ(config);
     services.ConfigureKafka(config);
     services.ConfigureWebhooks(config, builder);
     services.AddHealthChecks().AddCheck<MluviiWebhookHealthCheck>("Webhook");
@@ -38,7 +38,6 @@ void ConfigurePipeline(WebApplication app)
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
-
     app.MapControllers();
     app.MapHealthChecks("/health");
 }
