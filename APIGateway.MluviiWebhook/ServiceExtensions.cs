@@ -5,9 +5,7 @@ using APIGateway.Core.MluviiClient;
 using APIGateway.MluviiWebhook;
 using APIGateway.MluviiWebhook.Jobs;
 using MassTransit;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
-using Sentry;
 using Silverback.Samples.Kafka.Batch.Producer;
 
 namespace APIGateway.MluviiWebhook
