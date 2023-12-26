@@ -28,7 +28,7 @@
 		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.7.0" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.7.0" />
 		<PackageReference Include="Sentry.AspNetCore" Version="3.41.3" />
-		<PackageReference Include="Silverback.Integration.Kafka" Version="3.8.0" />
+		<PackageReference Include="Silverback.Integration.Kafka" Version="4.4.1" />
 	</ItemGroup>
 
 	<ItemGroup>
