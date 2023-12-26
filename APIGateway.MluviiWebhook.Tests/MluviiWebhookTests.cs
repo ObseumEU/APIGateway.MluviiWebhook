@@ -1,12 +1,11 @@
-﻿using APIGateway.Core.Kafka.Messages;
-using APIGateway.Core.Kafka;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Silverback.Messaging.Publishing;
 using System.IO;
 using Microsoft.FeatureManagement;
+using APIGateway.MluviiWebhook.Contracts;
 
 namespace APIGateway.MluviiWebhook.Tests;
 

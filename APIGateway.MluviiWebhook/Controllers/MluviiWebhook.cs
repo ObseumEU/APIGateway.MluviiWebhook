@@ -1,4 +1,4 @@
-using APIGateway.Core.Kafka.Messages;
+using APIGateway.MluviiWebhook.Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

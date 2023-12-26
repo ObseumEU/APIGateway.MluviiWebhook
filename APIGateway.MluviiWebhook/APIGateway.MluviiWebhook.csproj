@@ -36,6 +36,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\APIGateway.Core\APIGateway.Core\APIGateway.Core\APIGateway.Core.csproj" />
+	  <ProjectReference Include="..\APIGateway.MluviiWebhook.Contracts\APIGateway.MluviiWebhook.Contracts.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using APIGateway.Core.Kafka;
-using APIGateway.Core.Kafka.Messages;
 using APIGateway.MluviiWebhook;
+using APIGateway.MluviiWebhook.Contracts;
 using Microsoft.Extensions.Options;
 using Silverback.Messaging.Configuration;
 
