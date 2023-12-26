@@ -1,5 +1,6 @@
 using APIGateway.MluviiWebhook.Contracts;
 using MassTransit;
+using MassTransit.Transports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
@@ -18,14 +19,16 @@ public class MluviiWebhook : ControllerBase
     private readonly IPublisher _messageBroker;
     private readonly IOptions<WebhookOptions> _webhookOptions;
     private readonly IFeatureManager _feature;
+    private readonly IPublishEndpoint _publishEndpoint;
 
     public MluviiWebhook(ILogger<MluviiWebhook> logger, IPublisher messageBroker,
-        IOptions<WebhookOptions> webhookOptions, IFeatureManager feature)
+        IOptions<WebhookOptions> webhookOptions, IFeatureManager feature, IPublishEndpoint publishEndpoint)
     {
         _logger = logger;
         _messageBroker = messageBroker;
         _webhookOptions = webhookOptions;
         _feature = feature;
+        _publishEndpoint = publishEndpoint;
     }
 
     [HttpGet]
@@ -58,6 +61,7 @@ public class MluviiWebhook : ControllerBase
         Request.Body.Position = 0;
         _logger.LogInformation("Request body:" + body);
 
+
         var jobj = JsonConvert.DeserializeObject<JObject>(body);
         if (jobj != null && jobj["eventType"] != null)
         {
@@ -77,9 +81,12 @@ public class MluviiWebhook : ControllerBase
         return Ok();
     }
 
-    private Task PublishRabbitMQEvent(JObject jobj)
+    private async Task PublishRabbitMQEvent(JObject jobj)
     {
-        throw new NotImplementedException();
+        var payload = new WebhookEvent();
+        payload.EventType = jobj["eventType"].ToString();
+        payload.JsonData = jobj["data"].ToString();
+        await _publishEndpoint.Publish<WebhookEvent>(payload);
     }
 
     private async Task PublishKafkaEvent(JObject jobj)
