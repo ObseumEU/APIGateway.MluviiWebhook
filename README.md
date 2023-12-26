@@ -8,7 +8,7 @@
 
 ## Overview
 
-APIGateway.MluviiWebhook is a .NET 6 project designed to integrate with Mluvii's webhook system. It provides a flexible and robust way to handle events from Mluvii, a platform for customer service and communication. The project includes a Dockerfile for easy deployment and is designed with extensibility and maintainability in mind.
+APIGateway.MluviiWebhook is a .NET 7 project designed to integrate with Mluvii's webhook system. It provides a flexible and robust way to handle events from Mluvii, a platform for customer service and communication. The project includes a Dockerfile for easy deployment and is designed with extensibility and maintainability in mind.
 
 ## Features
 
@@ -29,7 +29,7 @@ APIGateway.MluviiWebhook is a .NET 6 project designed to integrate with Mluvii's
 ## Getting Started
 
 1. **Prerequisites**:
-   - .NET 6 SDK
+   - .NET 7 SDK
    - Docker (for containerization)
    - Kafka and RabbitMQ servers (if using those features)
 
