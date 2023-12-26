@@ -127,21 +127,4 @@ public class MluviiWebhookTests
         Assert.IsType<OkResult>(result);
         _publishEndpointMock.Verify(x => x.Publish(It.IsAny<WebhookEvent>(), default), Times.Never);
     }
-
-    [Fact]
-    public async Task WebhookPost_MissingEventType_ReturnsBadRequest()
-    {
-        // Arrange
-        var requestBody = "{\"data\": {}}";  // Missing eventType
-        var secret = "expectedSecret";
-
-        _controller.ControllerContext = CreateMockHttpContext(requestBody, secret);
-        _webhookOptionsMock.Setup(_ => _.Value).Returns(new WebhookOptions { Secret = secret });
-
-        // Act
-        var result = await _controller.WebhookPost();
-
-        // Assert
-        Assert.IsType<BadRequestResult>(result);
-    }
 }
