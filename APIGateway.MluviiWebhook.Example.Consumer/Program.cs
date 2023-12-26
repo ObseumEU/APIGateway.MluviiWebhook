@@ -8,7 +8,6 @@ IHostEnvironment env = Host.CreateDefaultBuilder(args).Build().Services.GetRequi
 var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, true)
-    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, true)
     .AddEnvironmentVariables()
     .Build();
 
