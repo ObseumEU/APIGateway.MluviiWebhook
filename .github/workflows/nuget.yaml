@@ -3,7 +3,7 @@ name: Publish NuGet Contract
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'APIGateway.MluviiWebhook.Contracts/**'
 
