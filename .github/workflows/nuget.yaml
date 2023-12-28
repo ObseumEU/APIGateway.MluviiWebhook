@@ -24,9 +24,9 @@ jobs:
     - name: Build
       run: dotnet build "APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj" --configuration Release --no-restore
 
-    - name: Test (Optional)
-      run: dotnet test "APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj" --no-restore --verbosity normal
-
+    - name: Install MinVer
+      run: dotnet tool install --global MinVer.Cli
+    
     - name: Pack
       run: |
         version=$(dotnet minver -t v)
