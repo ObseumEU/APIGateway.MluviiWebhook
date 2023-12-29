@@ -34,6 +34,6 @@ jobs:
 
     # Push NuGet Package
     - name: Push
-      run: Get-ChildItem nupkg -Filter *.nupkg | Foreach-Object { dotnet nuget push $_.FullName --source https://nuget.pkg.github.com/ObseumEU/index.json --api-key ${{ secrets.ACCESS_TOKEN }} --skip-duplicate }
+      run: Get-ChildItem nupkg -Filter *.nupkg | Foreach-Object { dotnet nuget push $_.FullName --source https://nuget.pkg.github.com/ObseumEU/index.json --api-key ${{ secrets.GITHUB_TOKEN  }} --skip-duplicate }
       env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        GITHUB_TOKEN : ${{ secrets.GITHUB_TOKEN  }}
