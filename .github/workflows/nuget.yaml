@@ -19,7 +19,6 @@ jobs:
       with:
         dotnet-version: '7.0'
 
-    # Restore dependencies
     - name: Restore dependencies
       run: dotnet restore APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj
 
@@ -28,6 +27,10 @@ jobs:
 
     - name: Pack
       run: dotnet pack APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj --no-build --configuration Release /p:PackageVersion=${{ github.run_number }} -o nupkg
+
+    # List files in the package directory
+    - name: List files in the nupkg directory
+      run: ls nupkg
 
     # Push NuGet Package
     - name: Push
