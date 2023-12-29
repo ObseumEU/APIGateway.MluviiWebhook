@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageId>APIGateway.MluviiWebhook.Contract</PackageId>
+    <PackageId>TestDummyPackageObseum</PackageId>
   </PropertyGroup>
 
 </Project>
