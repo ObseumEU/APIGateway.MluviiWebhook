@@ -19,15 +19,21 @@ jobs:
       with:
         dotnet-version: '7.0'
 
+    - name: Restore dependencies
+      run: dotnet restore APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj
+
     - name: Build
       run: dotnet build APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj --configuration Release --no-restore
 
     - name: Pack
       run: dotnet pack APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj --no-build --configuration Release /p:PackageVersion=${{ github.run_number }} -o nupkg
 
+    # List files in the package directory
+    - name: List files in the nupkg directory
+      run: ls nupkg
+
     # Push NuGet Package
     - name: Push
-      run: dotnet nuget push nupkg/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+      run: Get-ChildItem nupkg -Filter *.nupkg | Foreach-Object { dotnet nuget push $_.FullName --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} }
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-
