@@ -6,9 +6,11 @@ WORKDIR /app
 RUN apt-get update && apt-get --yes install curl
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build 
 WORKDIR /src 
-COPY . . 
-RUN dotnet restore "APIGateway.MluviiWebhook/APIGateway.MluviiWebhook.csproj" 
 
+COPY ["APIGateway.MluviiWebhook/APIGateway.MluviiWebhook.csproj", "APIGateway.MluviiWebhook/APIGateway.MluviiWebhook.csproj"]
+RUN dotnet restore "APIGateway.MluviiWebhook/APIGateway.MluviiWebhook.csproj"
+
+COPY . . 
 WORKDIR "/src/" 
 RUN dotnet build "APIGateway.MluviiWebhook/APIGateway.MluviiWebhook.csproj" -c Release -o /app/build 
  
