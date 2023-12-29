@@ -1,35 +1,33 @@
-name: Publish NuGet Contract
+name: Build and Publish NuGet
 
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'APIGateway.MluviiWebhook.Contracts/**'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  build-and-push:
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout Code
+      uses: actions/checkout@v2
 
-    - name: Setup .NET
+    - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '7.0'  # Specify your .NET version
-
-    - name: Restore dependencies
-      run: dotnet restore "APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj"
+        dotnet-version: '7.0'
 
     - name: Build
-      run: dotnet build "APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj" --configuration Release --no-restore
-
-    - name: Test (Optional)
-      run: dotnet test "APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj" --no-restore --verbosity normal
+      run: dotnet build --configuration Release --no-restore
 
     - name: Pack
-      run: dotnet pack "APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj" --configuration Release --no-build --output nupkgs
+      run: dotnet pack --no-build --configuration Release /p:PackageVersion=${{ github.run_number }} -o nupkg
 
-    - name: Publish
-      run: dotnet nuget push "nupkgs/*.nupkg" --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+    # Push NuGet Package
+    - name: Push
+      run: dotnet nuget push nupkg/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
