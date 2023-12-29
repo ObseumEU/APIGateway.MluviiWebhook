@@ -19,6 +19,10 @@ jobs:
       with:
         dotnet-version: '7.0'
 
+    # Restore dependencies
+    - name: Restore dependencies
+      run: dotnet restore APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj
+
     - name: Build
       run: dotnet build APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj --configuration Release --no-restore
 
@@ -30,4 +34,3 @@ jobs:
       run: dotnet nuget push nupkg/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-
