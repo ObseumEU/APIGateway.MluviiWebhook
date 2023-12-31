@@ -24,6 +24,7 @@ RUN dotnet publish "APIGateway.MluviiWebhook.csproj" -c Release -o /app/publish 
 
 # Test
 FROM build AS test 
+WORKDIR "/src/"
 RUN dotnet test "APIGateway.MluviiWebhook.Tests/APIGateway.MluviiWebhook.Tests.csproj" --collect:"XPlat Code Coverage" --results-directory:"/app/coverage/";
 
 # Final Image
