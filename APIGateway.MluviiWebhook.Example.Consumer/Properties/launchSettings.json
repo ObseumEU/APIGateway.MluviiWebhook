@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "APIGateway.MluviiWebhook.Example.Consumer": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

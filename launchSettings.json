@@ -4,20 +4,18 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "apigateway.mluviiwebhook": "StartWithoutDebugging",
-        "kafka": "StartWithoutDebugging",
-        "kafka-ui": "StartWithoutDebugging",
-        "zookeeper": "StartWithoutDebugging"
+        "apigateway.mluviiwebhook": "StartDebugging",
+        "apigateway.mluviiwebhook.example.consumer": "StartDebugging",
+        "rabbitmq": "StartDebugging"
       }
     },
     "Test": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "apigateway.mluviiwebhook": "StartWithoutDebugging",
-        "kafka": "StartWithoutDebugging",
-        "kafka-ui": "StartWithoutDebugging",
-        "zookeeper": "StartWithoutDebugging"
+        "apigateway.mluviiwebhook": "StartDebugging",
+        "apigateway.mluviiwebhook.example.consumer": "StartDebugging",
+        "rabbitmq": "StartWithoutDebugging"
       }
     }
   }

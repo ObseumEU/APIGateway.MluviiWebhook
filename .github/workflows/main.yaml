@@ -17,7 +17,7 @@ jobs:
     with:
       image: "mluvii/api-gateway-mluvii-webhook"
       dockerfile: ./Dockerfile
-      context: .
+      context: ./APIGateway.MluviiWebhook/
       tests: true
     secrets:
       ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

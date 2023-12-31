@@ -4,43 +4,64 @@ services:
   apigateway.mluviiwebhook:
    image: ${DOCKER_REGISTRY-}apigatewaymluviiwebhook
    build:
-     context: ./
+     context: ./APIGateway.MluviiWebhook
      dockerfile: Dockerfile
    ports:
      - "5025:5025"
-  kafka-0:
-    image: confluentinc/cp-kafka:7.5.2
-    container_name: kafka-0
-    ports:
-      - "9093:9093"
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-0:29094,PLAINTEXT_HOST://localhost:9093
-      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:29094,PLAINTEXT_HOST://0.0.0.0:9093
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-    depends_on:
-      - zookeeper
+   environment:
+     ASPNETCORE_ENVIRONMENT: Debug 
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.2
-    container_name: zookeeper
-    ports:
-      - "2182:2181"
-    environment:
-      - ZOOKEEPER_CLIENT_PORT=2181
-  kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
-    ports:
-      - "8181:8080"
+  apigateway.mluviiwebhook.example.consumer:
+   image: ${DOCKER_REGISTRY-}apigatewaymluviiwebhookexampleconsumer
+   build:
+     context: ./APIGateway.MluviiWebhook.Example.Consumer
+     dockerfile: Dockerfile
+   ports:
+     - "550:80"
+   environment:
+     ASPNETCORE_ENVIRONMENT: Debug 
+
+  rabbitmq:
+    image: masstransit/rabbitmq
     restart: always
-    environment:
-      - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-0:29094
-volumes:
-  zookeeper_data:
-    driver: local
-  kafka_data:
-    driver: local
+    container_name: rabbitmq
+    ports:
+      - 15682:15672
+      - 5662:5672
+
+#   kafka-0:
+#     image: confluentinc/cp-kafka:7.5.2
+#     container_name: kafka-0
+#     ports:
+#       - "9093:9093"
+#     environment:
+#       - KAFKA_BROKER_ID=1
+#       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+#       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+#       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-0:29094,PLAINTEXT_HOST://localhost:9093
+#       - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:29094,PLAINTEXT_HOST://0.0.0.0:9093
+#       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+#     depends_on:
+#       - zookeeper
+
+#   zookeeper:
+#     image: confluentinc/cp-zookeeper:7.5.2
+#     container_name: zookeeper
+#     ports:
+#       - "2182:2181"
+#     environment:
+#       - ZOOKEEPER_CLIENT_PORT=2181
+#   kafka-ui:
+#     image: provectuslabs/kafka-ui
+#     container_name: kafka-ui
+#     ports:
+#       - "8181:8080"
+#     restart: always
+#     environment:
+#       - KAFKA_CLUSTERS_0_NAME=local
+#       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-0:29094
+# volumes:
+#   zookeeper_data:
+#     driver: local
+#   kafka_data:
+#     driver: local
