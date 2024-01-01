@@ -21,7 +21,7 @@ async Task ConfigureServices(WebApplicationBuilder builder)
     services.ConfigureMluviiClient(config);
     await services.ConfigureRabbitMQ();
     await services.ConfigureKafka(config);
-    services.AddScoped<PublisherFactory>();
+    services.AddScoped<IPublisherFactory, PublisherFactory>();
 
 
     services.ConfigureWebhooks(config, builder);
