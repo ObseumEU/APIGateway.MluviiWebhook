@@ -1,11 +1,8 @@
-using APIGateway.MluviiWebhook.Contracts;
-using MassTransit;
+using APIGateway.MluviiWebhook.Publisher;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Silverback.Messaging.Publishing;
 using System.Text;
 
 namespace APIGateway.MluviiWebhook.Controllers;
@@ -15,19 +12,15 @@ namespace APIGateway.MluviiWebhook.Controllers;
 public class MluviiWebhook : ControllerBase
 {
     private readonly ILogger<MluviiWebhook> _logger;
-    private readonly IPublisher _messageBroker;
     private readonly IOptions<WebhookOptions> _webhookOptions;
-    private readonly IFeatureManager _feature;
-    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly IPublisherFactory _publisherFactory;
 
-    public MluviiWebhook(ILogger<MluviiWebhook> logger, IPublisher messageBroker,
-        IOptions<WebhookOptions> webhookOptions, IFeatureManager feature, IPublishEndpoint publishEndpoint)
+    public MluviiWebhook(ILogger<MluviiWebhook> logger, IPublisherFactory publisherFactory,
+        IOptions<WebhookOptions> webhookOptions)
     {
         _logger = logger;
-        _messageBroker = messageBroker;
+        _publisherFactory = publisherFactory;
         _webhookOptions = webhookOptions;
-        _feature = feature;
-        _publishEndpoint = publishEndpoint;
     }
 
     [HttpGet]
@@ -60,16 +53,11 @@ public class MluviiWebhook : ControllerBase
         Request.Body.Position = 0;
         _logger.LogInformation("Request body:" + body);
 
-
         var jobj = JsonConvert.DeserializeObject<JObject>(body);
         if (jobj != null && jobj["eventType"] != null)
         {
-            await PublishKafkaEvent(jobj);
-
-            if (await _feature.IsEnabledAsync(FeatureFlags.RABBITMQ))
-            {
-                await PublishRabbitMQEvent(jobj);
-            }
+            var publisher = await _publisherFactory.GetPublisher();
+            await publisher.PublishAsync(jobj);
         }
         else
         {
@@ -78,22 +66,5 @@ public class MluviiWebhook : ControllerBase
         }
 
         return Ok();
-    }
-
-    private async Task PublishRabbitMQEvent(JObject jobj)
-    {
-        var payload = new WebhookEvent();
-        payload.EventType = jobj["eventType"].ToString();
-        payload.JsonData = jobj["data"].ToString();
-        await _publishEndpoint.Publish<WebhookEvent>(payload);
-    }
-
-    private async Task PublishKafkaEvent(JObject jobj)
-    {
-        var payload = new WebhookEvent();
-        payload.EventType = jobj["eventType"].ToString();
-        payload.JsonData = jobj["data"].ToString();
-
-        await _messageBroker.PublishAsync(payload);
     }
 }

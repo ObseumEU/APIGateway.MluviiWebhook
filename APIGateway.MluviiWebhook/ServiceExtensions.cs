@@ -4,8 +4,10 @@ using APIGateway.Core.Kafka;
 using APIGateway.Core.MluviiClient;
 using APIGateway.MluviiWebhook;
 using APIGateway.MluviiWebhook.Jobs;
+using APIGateway.MluviiWebhook.Publisher;
 using MassTransit;
 using Microsoft.FeatureManagement;
+using Silverback.Messaging.Publishing;
 using Silverback.Samples.Kafka.Batch.Producer;
 
 namespace APIGateway.MluviiWebhook
@@ -31,7 +33,7 @@ namespace APIGateway.MluviiWebhook
             }
         }
 
-        public static async Task ConfigureRabbitMQ(this IServiceCollection services, IConfiguration config)
+        public static async Task ConfigureRabbitMQ(this IServiceCollection services)
         {
             var featureManager = services.BuildServiceProvider().GetService<IFeatureManager>();
             if (await featureManager.IsEnabledAsync(FeatureFlags.RABBITMQ))
@@ -39,6 +41,7 @@ namespace APIGateway.MluviiWebhook
                 services.AddHttpClient();
                 services.AddMassTransit(x =>
                 {
+                    // Configure for RabbitMQ transport
                     x.UsingRabbitMq((context, cfg) =>
                     {
                         var rabbitMQConfig = context.GetRequiredService<IConfiguration>().GetSection("RabbitMQ");
@@ -51,24 +54,27 @@ namespace APIGateway.MluviiWebhook
                         cfg.ConfigureEndpoints(context);
                     });
                 });
+                services.AddScoped<RabbitMQPublisher>();
             }
         }
 
-        public static void ConfigureKafka(this IServiceCollection services, IConfiguration config)
+        public static async Task ConfigureKafka(this IServiceCollection services, IConfiguration config)
         {
-            //Add kafka
-            services.Configure<KafkaOption>(config.GetSection("Kafka"));
-            services.Configure<KafkaProduceOption>(config.GetSection("KafkaProducer"));
-            services
-                .AddSilverback()
-                // Use Apache Kafka as message broker
-                .WithConnectionToMessageBroker(
-                    options => options
-                        .AddKafka())
+            services.AddScoped<KafkaPublisher>();
+            var featureManager = services.BuildServiceProvider().GetService<IFeatureManager>();
+                //Add kafka
+                services.Configure<KafkaOption>(config.GetSection("Kafka"));
+                services.Configure<KafkaProduceOption>(config.GetSection("KafkaProducer"));
+                services
+                    .AddSilverback()
+                    // Use Apache Kafka as message broker
+                    .WithConnectionToMessageBroker(
+                        options => options
+                            .AddKafka())
 
-                // Delegate the inbound/outbound endpoints configuration to a separate
-                // class.
-                .AddEndpointsConfigurator<EndpointsConfigurator>();
+                    // Delegate the inbound/outbound endpoints configuration to a separate
+                    // class.
+                    .AddEndpointsConfigurator<EndpointsConfigurator>();
         }
 
         public static void ConfigureWebhooks(this IServiceCollection services, IConfiguration config, WebApplicationBuilder builder)

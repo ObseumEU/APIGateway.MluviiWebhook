@@ -1,4 +1,5 @@
 using APIGateway.MluviiWebhook;
+using APIGateway.MluviiWebhook.Publisher;
 using Microsoft.FeatureManagement;
 using Sentry;
 
@@ -18,8 +19,11 @@ async Task ConfigureServices(WebApplicationBuilder builder)
     services.AddControllers();
     await services.ConfigureTelemetry(config);
     services.ConfigureMluviiClient(config);
-    await services.ConfigureRabbitMQ(config);
-    services.ConfigureKafka(config);
+    await services.ConfigureRabbitMQ();
+    await services.ConfigureKafka(config);
+    services.AddScoped<PublisherFactory>();
+
+
     services.ConfigureWebhooks(config, builder);
     services.AddHealthChecks().AddCheck<MluviiWebhookHealthCheck>("Webhook");
     builder.Services.AddSingleton<MluviiWebhookHealthCheck>();
