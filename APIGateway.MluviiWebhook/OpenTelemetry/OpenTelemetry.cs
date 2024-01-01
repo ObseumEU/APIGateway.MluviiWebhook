@@ -26,7 +26,6 @@ namespace APIGateway.MluviiWebhook
            .AddSource(openTelemetryOptions.SourceName)
            .AddAspNetCoreInstrumentation()
            .AddHttpClientInstrumentation()
-           .AddConsoleExporter()
            .AddOtlpExporter(options =>
             {
                 options.Endpoint = new Uri(openTelemetryOptions.UrlGrpc);
