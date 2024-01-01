@@ -7,7 +7,6 @@ using APIGateway.MluviiWebhook.Jobs;
 using APIGateway.MluviiWebhook.Publisher;
 using MassTransit;
 using Microsoft.FeatureManagement;
-using Silverback.Messaging.Publishing;
 using Silverback.Samples.Kafka.Batch.Producer;
 
 namespace APIGateway.MluviiWebhook
