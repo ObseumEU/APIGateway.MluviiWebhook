@@ -1,5 +1,4 @@
-﻿using APIGateway.MluviiWebhook.Contracts;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Silverback.Messaging.Publishing;
 
 namespace APIGateway.MluviiWebhook.Publisher
