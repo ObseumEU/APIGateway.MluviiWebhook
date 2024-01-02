@@ -31,7 +31,7 @@ APIGateway.MluviiWebhook is a .NET 7 project designed to integrate with Mluvii's
 1. **Prerequisites**:
    - .NET 7 SDK
    - Docker (for containerization)
-   - Kafka and RabbitMQ servers (if using those features)
+   - Kafka or RabbitMQ servers (if using those features)
 
 2. **Setup**:
    - Clone the repository.
