@@ -1,6 +1,6 @@
 ![FOMODOG](https://socialify.git.ci/BooAIPublic/APIGateway.MluviiWebhook/image?forks=1&issues=1&language=1&name=1&pulls=1&stargazers=1&theme=Light)
 [![Continous Integration](https://github.com/BooAIPublic/APIGateway.MluviiWebhook/actions/workflows/main.yaml/badge.svg)](https://github.com/BooAIPublic/APIGateway.MluviiWebhook/actions/workflows/main.yaml)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/68c366998df247e09411cf4abc6a5c4a)](https://app.codacy.com/gh/BooAIPublic/APIGateway.MluviiWebhook/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/68c366998df247e09411cf4abc6a5c4a)](https://app.codacy.com/gh/ObseumEU/APIGateway.MluviiWebhook/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 [![codecov](https://codecov.io/github/ObseumEU/APIGateway.MluviiWebhook/graph/badge.svg?token=A55O60A046)](https://codecov.io/github/ObseumEU/APIGateway.MluviiWebhook)
 
