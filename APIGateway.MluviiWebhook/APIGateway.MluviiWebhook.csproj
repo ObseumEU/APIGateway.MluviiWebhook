@@ -13,6 +13,7 @@
 		<OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
 		<TargetFrameworks>net7.0</TargetFrameworks>
 		<TargetFramework>net7.0</TargetFramework>
+		<PackageId>Obseum.APIGateway.Mluvii.Webhook.Contracts</PackageId>
 	</PropertyGroup>
 
 	<ItemGroup>
