@@ -15,7 +15,8 @@ namespace APIGateway.MluviiWebhook.Publisher
 
         public async Task PublishAsync(JObject jobj)
         {
-            var payload = new WebhookEvent
+            //Obsolate contract, new is in namespace APIGateway.MluviiWebhook.Contracts
+            var payload = new APIGateway.MluviiWebhook.Contracts.WebhookEvent
             {
                 EventType = jobj["eventType"].ToString(),
                 JsonData = jobj["data"].ToString()
