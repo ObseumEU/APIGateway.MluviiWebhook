@@ -8,38 +8,32 @@ on:
       - 'APIGateway.MluviiWebhook.Contracts/**'
 
 jobs:
-  build-and-publish:
-    runs-on: ubuntu-latest
+  build-and-push:
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout Code
+      uses: actions/checkout@v2
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0'  # Adjust to match your project
+        dotnet-version: '7.0'
 
     - name: Restore dependencies
-      run: dotnet restore "APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj"
+      run: dotnet restore APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj
 
     - name: Build
-      run: dotnet build "APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj" --configuration Release --no-restore
+      run: dotnet build APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj --configuration Release --no-restore
 
-    - name: Install MinVer
-      run: dotnet tool install --global MinVer.Cli
-    
     - name: Pack
-      run: |
-        version=$(dotnet minver -t v)
-        dotnet pack "APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj" --configuration Release --no-build --output nupkgs /p:PackageVersion=$version
+      run: dotnet pack APIGateway.MluviiWebhook.Contracts/APIGateway.MluviiWebhook.Contracts.csproj --no-build --configuration Release /p:PackageVersion=1.${{ github.run_number }} -o nupkg
 
-    - name: Publish
-      run: dotnet nuget push "nupkgs/*.nupkg" --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+    # List files in the package directory
+    - name: List files in the nupkg directory
+      run: ls nupkg
 
-    - name: Create Git Tag
-      if: startsWith(github.ref, 'refs/heads/main')
-      run: |
-        version=$(dotnet minver -t v)
-        git tag -a $version -m "Release $version"
-        git push origin $version
+    # Push NuGet Package
+    - name: Push
+      run: Get-ChildItem nupkg -Filter *.nupkg | Foreach-Object { dotnet nuget push $_.FullName --source https://nuget.pkg.github.com/ObseumEU/index.json --api-key ${{ secrets.GITHUB_TOKEN  }} --skip-duplicate }
       env:
-        GITHUB_TOKEN: ${{secrets.ACCESS_TOKEN}}
+        GITHUB_TOKEN : ${{ secrets.GITHUB_TOKEN  }}
