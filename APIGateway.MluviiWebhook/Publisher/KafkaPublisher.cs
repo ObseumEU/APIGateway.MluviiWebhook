@@ -15,7 +15,7 @@ namespace APIGateway.MluviiWebhook.Publisher
         public async Task PublishAsync(JObject jobj)
         {
             //Obsolate contract, new is in namespace APIGateway.MluviiWebhook.Contracts
-            var payload = new APIGateway.MluviiWebhook.Contracts.WebhookEvent
+            var payload = new APIGateway.Core.Kafka.Messages.WebhookEvent
             {
                 EventType = jobj["eventType"].ToString(),
                 JsonData = jobj["data"].ToString()
