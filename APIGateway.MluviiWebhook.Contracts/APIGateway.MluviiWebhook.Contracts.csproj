@@ -5,6 +5,7 @@
 	<LangVersion>10.0</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Obseum.APIGateway.Mluvii.Webhook.Contracts</PackageId>
   </PropertyGroup>
 
 </Project>
