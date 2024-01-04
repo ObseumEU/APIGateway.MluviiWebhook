@@ -15,13 +15,13 @@ namespace APIGateway.MluviiWebhook.Publisher
 
         public async Task PublishAsync(JObject jobj)
         {
-            var payload = new WebhookEvent
+            var payload = new WebhookEventContract
             {
                 EventType = jobj["eventType"].ToString(),
                 JsonData = jobj["data"].ToString()
             };
 
-            await _publishEndpoint.Publish<WebhookEvent>(payload);
+            await _publishEndpoint.Publish<WebhookEventContract>(payload);
         }
     }
 }

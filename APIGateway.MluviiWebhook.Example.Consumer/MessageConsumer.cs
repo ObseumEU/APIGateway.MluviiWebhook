@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace APIGateway.MluviiWebhook.Example.Consumer
 {
-    public class MessageConsumer : IConsumer<Contracts.WebhookEvent>
+    public class MessageConsumer : IConsumer<Contracts.WebhookEventContract>
     {
-        public async Task Consume(ConsumeContext<Contracts.WebhookEvent> context)
+        public async Task Consume(ConsumeContext<Contracts.WebhookEventContract> context)
         {
             Console.WriteLine($"Receive: {JsonConvert.SerializeObject(context)}");
         }
