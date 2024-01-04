@@ -19,7 +19,7 @@ async Task ConfigureServices(WebApplicationBuilder builder)
     services.AddControllers();
     await services.ConfigureTelemetry(config);
     services.ConfigureMluviiClient(config);
-    await services.ConfigureRabbitMQ(config);
+    await services.ConfigureRabbitMQ();
     await services.ConfigureKafka(config);
     services.AddScoped<IPublisherFactory, PublisherFactory>();
 

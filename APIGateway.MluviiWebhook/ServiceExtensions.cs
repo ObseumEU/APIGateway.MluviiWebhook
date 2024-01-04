@@ -6,7 +6,6 @@ using APIGateway.MluviiWebhook;
 using APIGateway.MluviiWebhook.Jobs;
 using APIGateway.MluviiWebhook.Publisher;
 using MassTransit;
-using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Silverback.Samples.Kafka.Batch.Producer;
 
@@ -33,23 +32,22 @@ namespace APIGateway.MluviiWebhook
             }
         }
 
-        public static async Task ConfigureRabbitMQ(this IServiceCollection services, IConfiguration config)
+        public static async Task ConfigureRabbitMQ(this IServiceCollection services)
         {
             var featureManager = services.BuildServiceProvider().GetService<IFeatureManager>();
             if (await featureManager.IsEnabledAsync(FeatureFlags.RABBITMQ))
             {
-                services.Configure<RabbitMQOptions>(config.GetSection("RabbitMQ"));
                 services.AddHttpClient();
                 services.AddMassTransit(x =>
                 {
                     // Configure for RabbitMQ transport
                     x.UsingRabbitMq((context, cfg) =>
                     {
-                        var options = context.GetRequiredService<IOptions<RabbitMQOptions>>();
-                        cfg.Host(options.Value.Host, options.Value.VirtualHost, h =>
+                        var rabbitMQConfig = context.GetRequiredService<IConfiguration>().GetSection("RabbitMQ");
+                        cfg.Host(rabbitMQConfig["Host"], rabbitMQConfig["VirtualHost"], h =>
                         {
-                            h.Username(options.Value.Username);
-                            h.Password(options.Value.Password);
+                            h.Username(rabbitMQConfig["Username"]);
+                            h.Password(rabbitMQConfig["Password"]);
                         });
 
                         cfg.ConfigureEndpoints(context);
