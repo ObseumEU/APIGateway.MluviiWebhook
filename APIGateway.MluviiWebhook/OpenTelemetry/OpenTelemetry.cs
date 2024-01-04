@@ -25,6 +25,7 @@ namespace APIGateway.MluviiWebhook
             .AddService(openTelemetryOptions.SourceName))
            .AddSource(openTelemetryOptions.SourceName)
            .AddAspNetCoreInstrumentation()
+           .AddConsoleExporter()
            .AddHttpClientInstrumentation()
            .AddOtlpExporter(options =>
             {
