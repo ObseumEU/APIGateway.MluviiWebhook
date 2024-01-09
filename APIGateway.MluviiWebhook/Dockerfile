@@ -1,5 +1,5 @@
 # Base Image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base 
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base 
 WORKDIR /app 
 EXPOSE 5025 
 
@@ -7,7 +7,7 @@ EXPOSE 5025
 RUN apt-get update && apt-get --yes install curl && rm -rf /var/lib/apt/lists/*
 
 # SDK Image for building source
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build 
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build 
 WORKDIR /src 
 
 # Copies the csproj and restores as distinct layers
