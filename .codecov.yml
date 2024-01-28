@@ -6,3 +6,4 @@ coverage:
     - "APIGateway.MluviiWebhook/OpenTelemetry/*"
     - "APIGateway.MluviiWebhook/ServiceExtensions.cs"
     - "APIGateway.MluviiWebhook/Jobs/AutoRegisterWebhookJob.cs"
+    - "APIGateway.MluviiWebhook/Publisher/PublisherFactory.cs"
