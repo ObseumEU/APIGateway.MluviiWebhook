@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using APIGateway.MluviiWebhook.Publisher;
 using APIGateway.MluviiWebhook.Contracts;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace APIGateway.MluviiWebhook.Tests;
 
@@ -13,7 +14,8 @@ public class RabbitMQPublisherTests
     {
         // Arrange
         var publishEndpointMock = new Mock<IPublishEndpoint>();
-        var rabbitMQPublisher = new RabbitMQPublisher(publishEndpointMock.Object);
+        var logMock = new Mock<ILogger<RabbitMQPublisher>>();
+        var rabbitMQPublisher = new RabbitMQPublisher(publishEndpointMock.Object, logMock.Object);
 
         var eventType = "TestEvent";
         var jsonData = "TestData";
