@@ -59,8 +59,13 @@ namespace APIGateway.MluviiWebhook
 
         public static async Task ConfigureKafka(this IServiceCollection services, IConfiguration config)
         {
-            services.AddScoped<KafkaPublisher>();
+
             var featureManager = services.BuildServiceProvider().GetService<IFeatureManager>();
+
+            if (!await featureManager.IsEnabledAsync(FeatureFlags.RABBITMQ))
+            {
+                services.AddScoped<KafkaPublisher>();
+
                 //Add kafka
                 services.Configure<KafkaOption>(config.GetSection("Kafka"));
                 services.Configure<KafkaProduceOption>(config.GetSection("KafkaProducer"));
@@ -74,9 +79,10 @@ namespace APIGateway.MluviiWebhook
                     // Delegate the inbound/outbound endpoints configuration to a separate
                     // class.
                     .AddEndpointsConfigurator<EndpointsConfigurator>();
-        }
+            }
+            }
 
-        public static void ConfigureWebhooks(this IServiceCollection services, IConfiguration config, WebApplicationBuilder builder)
+            public static void ConfigureWebhooks(this IServiceCollection services, IConfiguration config, WebApplicationBuilder builder)
         {
             services.Configure<WebhookOptions>(builder.Configuration.GetSection("Webhook"));
             services.AddSingleton<WebhookRegistrator>();

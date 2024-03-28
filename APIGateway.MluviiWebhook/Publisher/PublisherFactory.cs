@@ -10,6 +10,7 @@ namespace APIGateway.MluviiWebhook.Publisher
 
         public PublisherFactory(IFeatureManager featureManager, IServiceProvider serviceProvider)
         {
+            
             _featureManager = featureManager;
             _serviceProvider = serviceProvider;
         }
@@ -28,5 +29,4 @@ namespace APIGateway.MluviiWebhook.Publisher
             }
         }
     }
-
 }
