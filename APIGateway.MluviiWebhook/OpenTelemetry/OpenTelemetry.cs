@@ -3,6 +3,8 @@ using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
+using MassTransit;
+using MassTransit.Logging;
 
 namespace APIGateway.MluviiWebhook
 {
@@ -26,6 +28,7 @@ namespace APIGateway.MluviiWebhook
            .AddSource(openTelemetryOptions.SourceName)
            .AddAspNetCoreInstrumentation()
            .AddHttpClientInstrumentation()
+           .AddSource(DiagnosticHeaders.DefaultListenerName)
            .AddOtlpExporter(options =>
             {
                 options.Endpoint = new Uri(openTelemetryOptions.UrlGrpc);
