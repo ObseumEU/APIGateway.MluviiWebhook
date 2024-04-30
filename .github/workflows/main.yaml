@@ -13,7 +13,7 @@ jobs:
           submodules: recursive
           token: ${{ secrets.ACCESS_TOKEN }}
   docker:
-    uses: BooAIPublic/github-workflows/.github/workflows/build-and-push.yml@master
+    uses: ObseumEU/github-workflows/.github/workflows/build-and-push.yml@master
     with:
       image: "mluvii/api-gateway-mluvii-webhook"
       dockerfile: ./APIGateway.MluviiWebhook/Dockerfile
