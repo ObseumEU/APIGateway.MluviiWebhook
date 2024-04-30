@@ -1,4 +1,5 @@
 using APIGateway.MluviiWebhook;
+using APIGateway.MluviiWebhook.OpenTelemetry;
 using APIGateway.MluviiWebhook.Publisher;
 using Microsoft.FeatureManagement;
 using Sentry;
@@ -39,6 +40,7 @@ void ConfigurePipeline(WebApplication app)
         SentrySdk.CaptureMessage("Webhook service started!");
     }
 
+    app.UseMiddleware<TraceIdentifierMiddleware>();
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
