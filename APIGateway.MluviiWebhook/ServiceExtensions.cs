@@ -7,6 +7,7 @@ using APIGateway.MluviiWebhook.Jobs;
 using APIGateway.MluviiWebhook.Publisher;
 using MassTransit;
 using Microsoft.FeatureManagement;
+using OpenTelemetry.Resources;
 using Silverback.Samples.Kafka.Batch.Producer;
 
 namespace APIGateway.MluviiWebhook
@@ -23,12 +24,13 @@ namespace APIGateway.MluviiWebhook
                     .SetMinimumLevel(LogLevel.Information));
         }
 
-        public static async Task ConfigureTelemetry(this IServiceCollection services, IConfiguration config)
+        public static async Task ConfigureTelemetry(this IServiceCollection services, IConfiguration config, WebApplicationBuilder builder)
         {
+           
             var featureManager = services.BuildServiceProvider().GetService<IFeatureManager>();
             if (await featureManager.IsEnabledAsync(FeatureFlags.OPEN_TELEMETRY))
             {
-                services.AddConsoleOpenTelemetry(config.GetSection("OpenTelemetryOptions"));
+                services.AddConsoleOpenTelemetry(config.GetSection("OpenTelemetryOptions"), builder);
             }
         }
 
