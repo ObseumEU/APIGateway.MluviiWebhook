@@ -1,9 +1,8 @@
 using APIGateway.MluviiWebhook;
-using APIGateway.MluviiWebhook.OpenTelemetry;
 using APIGateway.MluviiWebhook.Publisher;
 using Microsoft.FeatureManagement;
-using OpenTelemetry.Resources;
 using Sentry;
+using Obseum.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 await ConfigureServices(builder);
@@ -16,10 +15,9 @@ async Task ConfigureServices(WebApplicationBuilder builder)
     var services = builder.Services;
     var config = builder.Configuration;
     builder.WebHost.UseSentry();
+    builder.AddObservability();
+
     services.AddFeatureManagement();
-
-    await services.ConfigureTelemetry(config, builder);
-
 
     //services.AddLogging(config);
     services.AddControllers();
@@ -44,7 +42,6 @@ void ConfigurePipeline(WebApplication app)
         SentrySdk.CaptureMessage("Webhook service started!");
     }
 
-    app.UseMiddleware<TraceIdentifierMiddleware>();
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
