@@ -20,7 +20,7 @@ RUN dotnet build "APIGateway.MluviiWebhook.csproj" -c Release -o /app/build
 
 # Publish
 FROM build AS publish 
-RUN dotnet publish "APIGateway.MluviiWebhook.csproj" -c Release -o /app/publish -f net7.0
+RUN dotnet publish "APIGateway.MluviiWebhook.csproj" -c Release -o /app/publish -f net8.0
 
 # Test
 FROM build AS test 
