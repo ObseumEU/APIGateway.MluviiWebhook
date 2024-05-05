@@ -17,8 +17,7 @@
     {
       "updateTypes": ["minor"],
       "automerge": true,
-      "matchUpdateTypes": ["minor"],
-      "matchConfidenceLevel": "high"
+      "matchUpdateTypes": ["minor"]
     }
   ]
 }
