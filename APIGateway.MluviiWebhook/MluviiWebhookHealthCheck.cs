@@ -2,6 +2,7 @@
 using APIGateway.Core.MluviiClient;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 
 namespace APIGateway.MluviiWebhook;
 
@@ -11,10 +12,13 @@ public class MluviiWebhookHealthCheck : IHealthCheck
 
     private readonly IServiceScopeFactory _provide;
 
-    public MluviiWebhookHealthCheck(IServiceScopeFactory provide, ILogger<MluviiWebhookHealthCheck> log)
+    private readonly IFeatureManager _feature;
+
+    public MluviiWebhookHealthCheck(IServiceScopeFactory provide, ILogger<MluviiWebhookHealthCheck> log, IFeatureManager feature)
     {
         _provide = provide;
         _log = log;
+        _feature = feature;
     }
 
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context)
@@ -28,12 +32,16 @@ public class MluviiWebhookHealthCheck : IHealthCheck
         using (var scope = _provide.CreateScope())
         {
             var options = scope.ServiceProvider.GetService<IOptionsMonitor<WebhookOptions>>();
-            var kafkaOptions = scope.ServiceProvider.GetService<IOptions<KafkaProduceOption>>();
 
-            if (string.IsNullOrEmpty(kafkaOptions.Value.Topic))
+            if (!await _feature.IsEnabledAsync(FeatureFlags.RABBITMQ))
             {
-                return Unhealthy(
-                    "Kafka topic cannot be null. Please add to appsettings KafkaProduceOption.Topic: \"some-topic\"");
+                var kafkaOptions = scope.ServiceProvider.GetService<IOptions<KafkaProduceOption>>();
+
+                if (string.IsNullOrEmpty(kafkaOptions.Value.Topic))
+                {
+                    return Unhealthy(
+                        "Kafka topic cannot be null. Please add to appsettings KafkaProduceOption.Topic: \"some-topic\"");
+                }
             }
 
             if (options.CurrentValue.AutoRegister)
