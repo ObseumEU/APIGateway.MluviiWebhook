@@ -23,15 +23,6 @@ namespace APIGateway.MluviiWebhook
                     .SetMinimumLevel(LogLevel.Information));
         }
 
-        public static async Task ConfigureTelemetry(this IServiceCollection services, IConfiguration config)
-        {
-            var featureManager = services.BuildServiceProvider().GetService<IFeatureManager>();
-            if (await featureManager.IsEnabledAsync(FeatureFlags.OPEN_TELEMETRY))
-            {
-                services.AddConsoleOpenTelemetry(config.GetSection("OpenTelemetryOptions"));
-            }
-        }
-
         public static async Task ConfigureRabbitMQ(this IServiceCollection services)
         {
             var featureManager = services.BuildServiceProvider().GetService<IFeatureManager>();
